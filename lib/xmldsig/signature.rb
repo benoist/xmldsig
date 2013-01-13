@@ -27,18 +27,9 @@ module Xmldsig
       signature.at_xpath("descendant::ds:Reference", NAMESPACES).get_attribute("URI")
     end
 
-    def sign(private_key = nil)
-      signed_info.at_xpath("descendant::ds:DigestValue").content  =
-          Base64.encode64(calculate_digest_value).chomp
-
-      signature_value = if private_key
-        calculate_signature_value(private_key)
-      elsif block_given?
-        yield(canonicalized_signed_info)
-      end
-
-      signature.at_xpath("descendant::ds:SignatureValue").content =
-          Base64.encode64(signature_value).chomp
+    def sign(private_key = nil, &block)
+      self.digest_value    = calculate_digest_value
+      self.signature_value = calculate_signature_value(private_key, &block)
     end
 
     def signed_info
@@ -71,8 +62,12 @@ module Xmldsig
       Canonicalizer.new(signed_info, canonicalization_method).canonicalize
     end
 
-    def calculate_signature_value(private_key)
-      private_key.sign(signature_method.new, canonicalized_signed_info)
+    def calculate_signature_value(private_key, &block)
+      if private_key
+        private_key.sign(signature_method.new, canonicalized_signed_info)
+      else
+        yield(canonicalized_signed_info)
+      end
     end
 
     def digest_method
@@ -85,6 +80,11 @@ module Xmldsig
       end
     end
 
+    def digest_value=(digest_value)
+      signed_info.at_xpath("descendant::ds:DigestValue").content =
+          Base64.encode64(digest_value).chomp
+    end
+
     def signature_method
       algorithm = signed_info.at_xpath("descendant::ds:SignatureMethod", NAMESPACES).get_attribute("Algorithm")
       algorithm = algorithm && algorithm =~ /sha(.*?)$/i && $1.to_i
@@ -94,6 +94,11 @@ module Xmldsig
         else
           OpenSSL::Digest::SHA1
       end
+    end
+
+    def signature_value=(signature_value)
+      signature.at_xpath("descendant::ds:SignatureValue").content =
+          Base64.encode64(signature_value).chomp
     end
 
     def transforms
