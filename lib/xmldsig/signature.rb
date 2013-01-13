@@ -4,7 +4,7 @@ module Xmldsig
 
     def initialize(signature)
       @signature = signature
-      @errors = []
+      @errors    = []
     end
 
     def digest_value
@@ -28,7 +28,7 @@ module Xmldsig
     end
 
     def sign(private_key)
-      signed_info.at_xpath("descendant::ds:DigestValue").content =
+      signed_info.at_xpath("descendant::ds:DigestValue").content  =
           Base64.encode64(calculate_digest_value).chomp
       signature.at_xpath("descendant::ds:SignatureValue").content =
           Base64.encode64(calculate_signature_value(private_key)).chomp
@@ -53,7 +53,7 @@ module Xmldsig
 
     def calculate_digest_value
       node = transforms.apply(referenced_node)
-      Digest::SHA2.digest node
+      digest_method.digest node
     end
 
     def canonicalization_method
@@ -65,7 +65,28 @@ module Xmldsig
     end
 
     def calculate_signature_value(private_key)
-      private_key.sign(OpenSSL::Digest::SHA256.new, canonicalized_signed_info)
+      private_key.sign(signature_method.new, canonicalized_signed_info)
+    end
+
+    def digest_method
+      algorithm = signed_info.at_xpath("descendant::ds:DigestMethod", NAMESPACES).get_attribute("Algorithm")
+      case algorithm
+        when "http://www.w3.org/2001/04/xmlenc#sha256"
+          Digest::SHA2
+        when "http://www.w3.org/2000/09/xmldsig#sha1"
+          Digest::SHA1
+      end
+    end
+
+    def signature_method
+      algorithm = signed_info.at_xpath("descendant::ds:SignatureMethod", NAMESPACES).get_attribute("Algorithm")
+      algorithm = algorithm && algorithm =~ /sha(.*?)$/i && $1.to_i
+      case algorithm
+        when 256 then
+          OpenSSL::Digest::SHA256
+        else
+          OpenSSL::Digest::SHA1
+      end
     end
 
     def transforms
@@ -79,9 +100,7 @@ module Xmldsig
     end
 
     def validate_signature_value(certificate)
-      unless certificate.public_key.verify(OpenSSL::Digest::SHA256.new,
-                                           signature_value,
-                                           canonicalized_signed_info)
+      unless certificate.public_key.verify(signature_method.new, signature_value, canonicalized_signed_info)
         errors << :signature
       end
     end

@@ -10,6 +10,7 @@ describe Xmldsig do
       canonicalizer_1_0
       canonicalizer_1_1
       canonicalizer_exc
+      digest_sha1
       without_namespace_prefix
       without_reference_uri
     ).each do |document|
