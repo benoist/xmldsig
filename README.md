@@ -1,7 +1,7 @@
 [![Build Status](https://secure.travis-ci.org/benoist/xmldsig.png?branch=master)](http://travis-ci.org/benoist/xmldsig)
 # Xmldsig
 
-TODO: Write a gem description
+This gem is a (partial) implementation of the XMLDsig specification (http://www.w3.org/TR/xmldsig-core)
 
 ## Installation
 
@@ -19,7 +19,53 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+unsigned_xml = <<-XML
+<?xml version="1.0" encoding="UTF-8"?>
+<foo:Foo ID="foo" xmlns:foo="http://example.com/foo#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:ec="http://www.w3.org/2001/10/xml-exc-c14n#">
+  <foo:Bar>bar</foo:Bar>
+  <ds:Signature>
+    <ds:SignedInfo>
+      <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+      <ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+      <ds:Reference URI="#foo">
+        <ds:Transforms>
+          <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+          <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
+            <ec:InclusiveNamespaces PrefixList="foo"/>
+          </ds:Transform>
+        </ds:Transforms>
+        <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ds:DigestValue></ds:DigestValue>
+      </ds:Reference>
+    </ds:SignedInfo>
+    <ds:SignatureValue></ds:SignatureValue>
+  </ds:Signature>
+</foo:Foo>
+XML
+
+private_key = OpenSSL::PKey::RSA.new(File.read("key.pem"))
+certificate = OpenSSL::X509::Certificate.new(File.read("certificate.cer"))
+
+unsigned_document = Xmldsig::SignedDocument.new(unsigned_xml)
+signed_xml = unsigned_document.sign(private_key)
+
+# With block
+signed_xml = unsigned_document.sign do |data|
+  private_key.sign(OpenSSL::Digest::SHA256.new, data)
+end
+
+# Validation
+
+signed_document = Xmldsig::SignedDocument.new(signed_xml)
+document.verify(certificate)
+
+# With block
+signed_document = Xmldsig::SignedDocument.new(signed_xml)
+document.verify do |signature_value, data|
+  certificate.public_key.verify(OpenSSL::Digest::SHA256.new, signature_value, data)
+end
+```
 
 ## Contributing
 
