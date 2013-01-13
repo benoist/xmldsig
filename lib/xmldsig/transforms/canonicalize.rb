@@ -2,21 +2,14 @@ module Xmldsig
   class Transforms < Array
     class Canonicalize < Transform
       def transform
-        self.node = node.canonicalize(algorithm, inclusive_namespaces)
+        self.node = Canonicalizer.new(node, algorithm, inclusive_namespaces).canonicalize
         node
       end
 
       private
 
       def algorithm
-        case transform_node.get_attribute("Algorithm")
-          when "http://www.w3.org/2001/10/xml-exc-c14n#"
-            Nokogiri::XML::XML_C14N_EXCLUSIVE_1_0
-          when "http://www.w3.org/TR/2001/REC-xml-c14n-20010315"
-            Nokogiri::XML::XML_C14N_1_0
-          when "http://www.w3.org/2006/12/xml-c14n11"
-            Nokogiri::XML::XML_C14N_1_1
-        end
+        transform_node.get_attribute("Algorithm")
       end
 
       def inclusive_namespaces

@@ -52,8 +52,16 @@ module Xmldsig
       Digest::SHA2.digest node
     end
 
+    def canonicalization_method
+      signed_info.at_xpath("descendant::ds:CanonicalizationMethod", NAMESPACES).get_attribute("Algorithm")
+    end
+
+    def canonicalized_signed_info
+      Canonicalizer.new(signed_info, canonicalization_method).canonicalize
+    end
+
     def calculate_signature_value(private_key)
-      private_key.sign(OpenSSL::Digest::SHA256.new, signed_info.canonicalize(Nokogiri::XML::XML_C14N_EXCLUSIVE_1_0))
+      private_key.sign(OpenSSL::Digest::SHA256.new, canonicalized_signed_info)
     end
 
     def transforms
@@ -61,13 +69,17 @@ module Xmldsig
     end
 
     def validate_digest_value
-      errors << :digest_value unless digest_value == calculate_digest_value
+      unless digest_value == calculate_digest_value
+        errors << :digest_value
+      end
     end
 
     def validate_signature_value(certificate)
-      errors << :signature unless certificate.public_key.verify(OpenSSL::Digest::SHA256.new,
-                                                                signature_value,
-                                                                signed_info.canonicalize(Nokogiri::XML::XML_C14N_EXCLUSIVE_1_0))
+      unless certificate.public_key.verify(OpenSSL::Digest::SHA256.new,
+                                           signature_value,
+                                           canonicalized_signed_info)
+        errors << :signature
+      end
     end
   end
 end

@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe Xmldsig::Signature do
   let(:certificate) { OpenSSL::X509::Certificate.new(File.read("spec/fixtures/certificate.cer")) }
+  let(:other_certificate) { OpenSSL::X509::Certificate.new(File.read("spec/fixtures/certificate2.cer")) }
   let(:private_key) { OpenSSL::PKey::RSA.new(File.read("spec/fixtures/key.pem")) }
   let(:document) { Nokogiri::XML::Document.parse File.read("spec/fixtures/signed.xml") }
   let(:signature_node) { document.at_xpath("//ds:Signature", Xmldsig::NAMESPACES) }
@@ -72,6 +73,16 @@ describe Xmldsig::Signature do
   describe "#valid?" do
     it "returns true with the correct certificate" do
       signature.valid?(certificate).should be_true
+    end
+
+    it "returns false if the xml changed" do
+      signature.stub(:document).and_return(Nokogiri::XML::Document.parse(File.read("spec/fixtures/signed.xml").gsub("\s\s", "\s")))
+      signature.valid?(certificate)
+      signature.errors.should include(:digest_value)
+    end
+
+    it "returns false with a difference certificate" do
+      signature.valid?(other_certificate).should be_false
     end
   end
 end
