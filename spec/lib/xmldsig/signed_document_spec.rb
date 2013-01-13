@@ -58,4 +58,25 @@ describe Xmldsig::SignedDocument do
     end
   end
 
+
+  describe "Nested Signatures" do
+    let(:unsigned_xml) { File.read("spec/fixtures/unsigned_nested_signature.xml") }
+    let(:unsigned_document) { Xmldsig::SignedDocument.new(unsigned_xml) }
+    let(:signed_document) { unsigned_document.sign(private_key) }
+
+    it "when signed should be valid" do
+      Xmldsig::SignedDocument.new(signed_document).validate(certificate).should be_true
+    end
+
+    it "should sign 2 elements" do
+      unsigned_document.signed_nodes.count.should == 2
+    end
+
+    it "allows individual signs" do
+      unsigned_document.signatures.last.sign(private_key)
+      unsigned_document.validate(certificate).should be_false
+      unsigned_document.signatures.last.valid?(certificate).should be_true
+    end
+  end
+
 end
