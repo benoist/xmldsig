@@ -1,3 +1,4 @@
+[![Build Status](https://secure.travis-ci.org/benoist/xmldsig.png?branch=master)](http://travis-ci.org/benoist/xmldsig)
 # Xmldsig
 
 TODO: Write a gem description
