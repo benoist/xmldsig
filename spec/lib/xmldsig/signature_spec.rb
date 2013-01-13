@@ -21,7 +21,13 @@ describe Xmldsig::Signature do
   end
 
   describe "#referenced_node" do
-    it "returns the referenced_node" do
+    it "returns the referenced_node by id" do
+      signature.referenced_node.to_s.should ==
+          document.at_xpath("//*[@ID='foo']").to_s
+    end
+
+    it "returns the referenced node by parent" do
+      signature.stub(:reference_uri).and_return("")
       signature.referenced_node.to_s.should ==
           document.at_xpath("//*[@ID='foo']").to_s
     end

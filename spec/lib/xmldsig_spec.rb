@@ -11,7 +11,7 @@ describe Xmldsig do
       canonicalizer_1_1
       canonicalizer_exc
       without_namespace_prefix
-      with_ID
+      without_reference_uri
     ).each do |document|
       describe "#{document}" do
         let(:unsigned_xml) { File.read("spec/fixtures/unsigned/#{document}.xml") }

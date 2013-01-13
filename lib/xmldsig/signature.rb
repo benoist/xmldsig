@@ -16,7 +16,11 @@ module Xmldsig
     end
 
     def referenced_node
-      document.dup.at_xpath("//*[@ID='#{reference_uri[1..-1]}']")
+      if reference_uri && reference_uri != ""
+        document.dup.at_xpath("//*[@ID='#{reference_uri[1..-1]}']")
+      else
+        document.dup.at_xpath(signature.parent.path)
+      end
     end
 
     def reference_uri
