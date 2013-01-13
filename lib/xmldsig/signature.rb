@@ -27,11 +27,18 @@ module Xmldsig
       signature.at_xpath("descendant::ds:Reference", NAMESPACES).get_attribute("URI")
     end
 
-    def sign(private_key)
+    def sign(private_key = nil)
       signed_info.at_xpath("descendant::ds:DigestValue").content  =
           Base64.encode64(calculate_digest_value).chomp
+
+      signature_value = if private_key
+        calculate_signature_value(private_key)
+      elsif block_given?
+        yield(canonicalized_signed_info)
+      end
+
       signature.at_xpath("descendant::ds:SignatureValue").content =
-          Base64.encode64(calculate_signature_value(private_key)).chomp
+          Base64.encode64(signature_value).chomp
     end
 
     def signed_info
@@ -42,10 +49,10 @@ module Xmldsig
       Base64.decode64 signature.at_xpath("descendant::ds:SignatureValue", NAMESPACES).content
     end
 
-    def valid?(certificate)
+    def valid?(certificate = nil, &block)
       @errors = []
       validate_digest_value
-      validate_signature_value(certificate)
+      validate_signature_value(certificate, &block)
       @errors.empty?
     end
 
@@ -100,7 +107,13 @@ module Xmldsig
     end
 
     def validate_signature_value(certificate)
-      unless certificate.public_key.verify(signature_method.new, signature_value, canonicalized_signed_info)
+      signature_valid = if certificate
+        certificate.public_key.verify(signature_method.new, signature_value, canonicalized_signed_info)
+      else
+        yield(signature_value, canonicalized_signed_info)
+      end
+
+      unless signature_valid
         errors << :signature
       end
     end

@@ -60,6 +60,17 @@ describe Xmldsig::Signature do
       ")
     end
 
+    it "accepts a block" do
+      signature.sign do |data|
+        private_key.sign(OpenSSL::Digest::SHA256.new, data)
+      end
+      signature.signature_value.should == Base64.decode64("
+        E3yyqsSoxRkhYEuaEtR+SLg85gU5B4a7xUXA+d2Zn6j7F6z73dOd8iYHOusB
+        Ty3C/3ujbmPhHKg8uX9kUE8b+YoOqZt4z9pdxAq44nJEuijwi4doIPpHWirv
+        BnSoP5IoL0DYzGVrgj8udRzfAw5nNeV7wSrBZEn+yrxmUPJoUZc=
+      ")
+    end
+
   end
 
   describe "#signed_info" do
@@ -89,6 +100,13 @@ describe Xmldsig::Signature do
 
     it "returns false with a difference certificate" do
       signature.valid?(other_certificate).should be_false
+    end
+
+    it "accepts a block" do
+      signature.valid? do |signature_value, data|
+        certificate.public_key.verify(OpenSSL::Digest::SHA256.new, signature_value, data)
+      end
+      signature.errors.should be_empty
     end
   end
 end

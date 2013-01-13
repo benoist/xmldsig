@@ -6,12 +6,12 @@ module Xmldsig
       @document = Nokogiri::XML::Document.parse(document)
     end
 
-    def validate(certificate)
-      signatures.all? { |signature| signature.valid?(certificate) }
+    def validate(certificate = nil, &block)
+      signatures.all? { |signature| signature.valid?(certificate, &block) }
     end
 
-    def sign(private_key)
-      signatures.each { |signature| signature.sign(private_key) }
+    def sign(private_key = nil, &block)
+      signatures.each { |signature| signature.sign(private_key, &block) }
       @document.to_s
     end
 

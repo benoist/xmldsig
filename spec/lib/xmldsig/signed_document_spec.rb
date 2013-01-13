@@ -36,11 +36,24 @@ describe Xmldsig::SignedDocument do
     it "returns false if the certificate is not valid" do
       signed_document.validate(other_certificate).should be_false
     end
+
+    it "accepts a block" do
+      signed_document.validate do |signature_value, data|
+        certificate.public_key.verify(OpenSSL::Digest::SHA256.new, signature_value, data)
+      end.should be_true
+    end
   end
 
   describe "#sign" do
     it "returns a signed document" do
       signed_document = unsigned_document.sign(private_key)
+      Xmldsig::SignedDocument.new(signed_document).validate(certificate).should be_true
+    end
+
+    it "accepts a block" do
+      signed_document = unsigned_document.sign do |data|
+        private_key.sign(OpenSSL::Digest::SHA256.new, data)
+      end
       Xmldsig::SignedDocument.new(signed_document).validate(certificate).should be_true
     end
   end
