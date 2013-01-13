@@ -1,7 +1,6 @@
 require "nokogiri"
 require "openssl"
 require "base64"
-require "rexml/document"
 require "xmldsig/version"
 require "xmldsig/signed_document"
 require "xmldsig/transforms/transform"
