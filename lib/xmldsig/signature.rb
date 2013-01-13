@@ -16,7 +16,7 @@ module Xmldsig
     end
 
     def referenced_node
-      document.dup.at_xpath("//*[@Id='#{reference_uri[1..-1]}']")
+      document.dup.at_xpath("//*[@ID='#{reference_uri[1..-1]}']")
     end
 
     def reference_uri

@@ -10,7 +10,7 @@ describe Xmldsig::Signature do
 
   describe "#digest_value" do
     it "returns the digest value in the xml" do
-      signature.digest_value.should == Base64.decode64("RAk+4eKRchRn6J3xM1HMdXRZ2GDSQTDRoUDSnnWS9vo=")
+      signature.digest_value.should == Base64.decode64("ftoSYFdze1AWgGHF5N9i9SFKThXkqH2AdyzA3/epbJw=")
     end
   end
 
@@ -23,7 +23,7 @@ describe Xmldsig::Signature do
   describe "#referenced_node" do
     it "returns the referenced_node" do
       signature.referenced_node.to_s.should ==
-          document.at_xpath("//*[@Id='foo']").to_s
+          document.at_xpath("//*[@ID='foo']").to_s
     end
   end
 
@@ -43,14 +43,14 @@ describe Xmldsig::Signature do
     end
 
     it "sets the digest value" do
-      signature.digest_value.should == Base64.decode64("RAk+4eKRchRn6J3xM1HMdXRZ2GDSQTDRoUDSnnWS9vo=")
+      signature.digest_value.should == Base64.decode64("ftoSYFdze1AWgGHF5N9i9SFKThXkqH2AdyzA3/epbJw=")
     end
 
     it "sets the signature value" do
       signature.signature_value.should == Base64.decode64("
-        YJkkyBdOCYEbZ5I7Y5BvS2GhCnkpbbe7liyG3X+nnT3/Db3AaEXu0l+KfhhT
-        l6fBLFoq3WDlLveipZRUBcb4HxjJpVzD7cRCDA+h0y1ZHyfJG4hpFxqcI384
-        wlTSic/Ogs4WsajhVi2CAAphU0CAi7fwAvnQG4o+VJd/hf07cNY=
+        E3yyqsSoxRkhYEuaEtR+SLg85gU5B4a7xUXA+d2Zn6j7F6z73dOd8iYHOusB
+        Ty3C/3ujbmPhHKg8uX9kUE8b+YoOqZt4z9pdxAq44nJEuijwi4doIPpHWirv
+        BnSoP5IoL0DYzGVrgj8udRzfAw5nNeV7wSrBZEn+yrxmUPJoUZc=
       ")
     end
 

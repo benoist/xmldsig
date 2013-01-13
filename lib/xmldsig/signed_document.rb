@@ -16,9 +16,7 @@ module Xmldsig
     end
 
     def signed_nodes
-      signatures.collect do |signature|
-        document.dup.at_xpath("//*[@Id='#{signature.reference_uri[1..-1]}']")
-      end
+      signatures.collect(&:referenced_node)
     end
 
     def signatures
