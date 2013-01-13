@@ -12,7 +12,7 @@ describe Xmldsig do
       without_namespace_prefix
       unsigned
     ).each do |document|
-      describe "document" do
+      describe "#{document}" do
         let(:unsigned_xml) { File.read("spec/fixtures/#{document}.xml") }
         let(:unsigned_document) { Xmldsig::SignedDocument.new(unsigned_xml) }
 
