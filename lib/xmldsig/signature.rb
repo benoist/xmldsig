@@ -19,7 +19,7 @@ module Xmldsig
       if reference_uri && reference_uri != ""
         document.dup.at_xpath("//*[@ID='#{reference_uri[1..-1]}']")
       else
-        document.dup.at_xpath(signature.parent.path)
+        document.root
       end
     end
 
@@ -81,7 +81,7 @@ module Xmldsig
     end
 
     def digest_value=(digest_value)
-      signed_info.at_xpath("descendant::ds:DigestValue").content =
+      signed_info.at_xpath("descendant::ds:DigestValue", NAMESPACES).content =
           Base64.encode64(digest_value).chomp
     end
 
@@ -97,7 +97,7 @@ module Xmldsig
     end
 
     def signature_value=(signature_value)
-      signature.at_xpath("descendant::ds:SignatureValue").content =
+      signature.at_xpath("descendant::ds:SignatureValue", NAMESPACES).content =
           Base64.encode64(signature_value).chomp
     end
 

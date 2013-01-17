@@ -5,17 +5,9 @@ describe Xmldsig do
   let(:certificate) { OpenSSL::X509::Certificate.new(File.read("spec/fixtures/certificate.cer")) }
 
   describe "Sign unsigned documents" do
-
-    %w(
-      canonicalizer_1_0
-      canonicalizer_1_1
-      canonicalizer_exc
-      digest_sha1
-      without_namespace_prefix
-      without_reference_uri
-    ).each do |document|
+    Dir["spec/fixtures/unsigned/*.xml"].each do |document|
       describe "#{document}" do
-        let(:unsigned_xml) { File.read("spec/fixtures/unsigned/#{document}.xml") }
+        let(:unsigned_xml) { File.read(document) }
         let(:unsigned_document) { Xmldsig::SignedDocument.new(unsigned_xml) }
 
         it "should be signable an validateable" do
