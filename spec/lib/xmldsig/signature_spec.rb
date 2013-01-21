@@ -61,7 +61,8 @@ describe Xmldsig::Signature do
     end
 
     it "accepts a block" do
-      signature.sign do |data|
+      signature.sign do |data, signature_algorithm|
+        signature_algorithm.should == "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"
         private_key.sign(OpenSSL::Digest::SHA256.new, data)
       end
       signature.signature_value.should == Base64.decode64("
@@ -103,7 +104,8 @@ describe Xmldsig::Signature do
     end
 
     it "accepts a block" do
-      signature.valid? do |signature_value, data|
+      signature.valid? do |signature_value, data, signature_algorithm|
+        signature_algorithm.should == "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"
         certificate.public_key.verify(OpenSSL::Digest::SHA256.new, signature_value, data)
       end
       signature.errors.should be_empty

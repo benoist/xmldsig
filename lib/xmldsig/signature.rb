@@ -66,7 +66,7 @@ module Xmldsig
       if private_key
         private_key.sign(signature_method.new, canonicalized_signed_info)
       else
-        yield(canonicalized_signed_info)
+        yield(canonicalized_signed_info, signature_algorithm)
       end
     end
 
@@ -85,9 +85,12 @@ module Xmldsig
           Base64.encode64(digest_value).chomp
     end
 
+    def signature_algorithm
+      signed_info.at_xpath("descendant::ds:SignatureMethod", NAMESPACES).get_attribute("Algorithm")
+    end
+
     def signature_method
-      algorithm = signed_info.at_xpath("descendant::ds:SignatureMethod", NAMESPACES).get_attribute("Algorithm")
-      algorithm = algorithm && algorithm =~ /sha(.*?)$/i && $1.to_i
+      algorithm = signature_algorithm && signature_algorithm =~ /sha(.*?)$/i && $1.to_i
       case algorithm
         when 256 then
           OpenSSL::Digest::SHA256
@@ -115,7 +118,7 @@ module Xmldsig
       signature_valid = if certificate
         certificate.public_key.verify(signature_method.new, signature_value, canonicalized_signed_info)
       else
-        yield(signature_value, canonicalized_signed_info)
+        yield(signature_value, canonicalized_signed_info, signature_algorithm)
       end
 
       unless signature_valid
