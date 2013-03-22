@@ -7,7 +7,7 @@ module Xmldsig
     end
 
     def validate(certificate = nil, &block)
-      signatures.all? { |signature| signature.valid?(certificate, &block) }
+      signatures.empty? ? false : signatures.all? { |signature| signature.valid?(certificate, &block) }
     end
 
     def sign(private_key = nil, &block)
