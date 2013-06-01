@@ -19,7 +19,7 @@ module Xmldsig
       if reference_uri && reference_uri != ""
         document.dup.at_xpath("//*[@ID='#{reference_uri[1..-1]}']")
       else
-        document.root
+        document.dup.root
       end
     end
 

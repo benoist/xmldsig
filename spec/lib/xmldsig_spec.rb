@@ -14,6 +14,11 @@ describe Xmldsig do
           signed_document = unsigned_document.sign(private_key)
           Xmldsig::SignedDocument.new(signed_document).validate(certificate).should be_true
         end
+        
+        it 'should have a signature element' do
+          signed_document = unsigned_document.sign(private_key)
+          Xmldsig::SignedDocument.new(signed_document).signatures.count.should == 1
+        end
       end
     end
   end
