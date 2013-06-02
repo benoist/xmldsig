@@ -36,6 +36,11 @@ describe Xmldsig::SignedDocument do
     it "returns false if the certificate is not valid" do
       signed_document.validate(other_certificate).should be_false
     end
+    
+    it "returns false if there are no signatures and validation is strict" do
+      xml_without_signature = Xmldsig::SignedDocument.new('<foo></foo>')
+      xml_without_signature.validate(certificate).should be_false
+    end
 
     it "accepts a block" do
       signed_document.validate do |signature_value, data|
