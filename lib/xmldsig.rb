@@ -12,7 +12,8 @@ require "xmldsig/signature"
 
 module Xmldsig
   NAMESPACES = {
-      "ds" => "http://www.w3.org/2000/09/xmldsig#",
-      "ec" => "http://www.w3.org/2001/10/xml-exc-c14n#"
+      "ds"  => "http://www.w3.org/2000/09/xmldsig#",
+      "ec"  => "http://www.w3.org/2001/10/xml-exc-c14n#",
+      "wsu" => "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
   }
 end

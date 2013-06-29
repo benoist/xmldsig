@@ -31,6 +31,18 @@ describe Xmldsig::Signature do
       signature.referenced_node.to_s.should ==
           document.root.to_s
     end
+
+    it "returns the reference node when using WS-Security style id attribute" do
+      document.xpath('//*[@ID]').each do |n|
+        n.add_namespace('wsu', Xmldsig::NAMESPACES['wsu'])
+        n['wsu:Id'] = n['ID']
+        n.remove_attribute('ID')
+      end
+
+      signature.referenced_node.
+        attribute_with_ns('Id', Xmldsig::NAMESPACES['wsu']).value.
+        should == 'foo'
+    end
   end
 
   describe "#reference_uri" do

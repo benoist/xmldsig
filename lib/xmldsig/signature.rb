@@ -17,7 +17,10 @@ module Xmldsig
 
     def referenced_node
       if reference_uri && reference_uri != ""
-        document.dup.at_xpath("//*[@ID='#{reference_uri[1..-1]}']")
+        id = reference_uri[1..-1]
+        document.dup.at_xpath(
+          "//*[@ID='#{id}' or @wsu:Id='#{id}']", NAMESPACES
+        )
       else
         document.dup.root
       end
