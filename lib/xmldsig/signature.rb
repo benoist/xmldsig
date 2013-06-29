@@ -1,46 +1,23 @@
 module Xmldsig
   class Signature
-    attr_accessor :signature, :errors
-
-    class ReferencedNodeNotFound < Exception; end
+    attr_accessor :signature
 
     def initialize(signature)
       @signature = signature
-      @errors    = []
     end
 
-    def digest_value
-      Base64.decode64 signed_info.at_xpath("descendant::ds:DigestValue", NAMESPACES).content
-    end
-
-    def document
-      signature.document
-    end
-
-    def referenced_node
-      if reference_uri && reference_uri != ""
-        id = reference_uri[1..-1]
-        if ref = document.dup.at_xpath(
-          "//*[@ID='#{id}' or @wsu:Id='#{id}']", NAMESPACES
-        )
-          ref
-        else
-          raise(
-            ReferencedNodeNotFound,
-            "Could not find the referenced node #{id}'"
-          )
-        end
-      else
-        document.dup.root
+    def references
+      @references ||= signature.xpath("descendant::ds:Reference", NAMESPACES).map do |node|
+        Reference.new(node)
       end
     end
 
-    def reference_uri
-      signature.at_xpath("descendant::ds:Reference", NAMESPACES).get_attribute("URI")
+    def errors
+      references.flat_map(&:errors) + @errors
     end
 
     def sign(private_key = nil, &block)
-      self.digest_value    = calculate_digest_value
+      references.each(&:sign)
       self.signature_value = calculate_signature_value(private_key, &block)
     end
 
@@ -54,17 +31,13 @@ module Xmldsig
 
     def valid?(certificate = nil, &block)
       @errors = []
-      validate_digest_value
+      references.each { |r| r.errors = [] }
+      validate_digest_values
       validate_signature_value(certificate, &block)
-      @errors.empty?
+      errors.empty?
     end
 
     private
-
-    def calculate_digest_value
-      node = transforms.apply(referenced_node)
-      digest_method.digest node
-    end
 
     def canonicalization_method
       signed_info.at_xpath("descendant::ds:CanonicalizationMethod", NAMESPACES).get_attribute("Algorithm")
@@ -80,21 +53,6 @@ module Xmldsig
       else
         yield(canonicalized_signed_info, signature_algorithm)
       end
-    end
-
-    def digest_method
-      algorithm = signed_info.at_xpath("descendant::ds:DigestMethod", NAMESPACES).get_attribute("Algorithm")
-      case algorithm
-        when "http://www.w3.org/2001/04/xmlenc#sha256"
-          Digest::SHA2
-        when "http://www.w3.org/2000/09/xmldsig#sha1"
-          Digest::SHA1
-      end
-    end
-
-    def digest_value=(digest_value)
-      signed_info.at_xpath("descendant::ds:DigestValue", NAMESPACES).content =
-          Base64.encode64(digest_value).chomp
     end
 
     def signature_algorithm
@@ -116,14 +74,8 @@ module Xmldsig
           Base64.encode64(signature_value).chomp
     end
 
-    def transforms
-      Transforms.new(signature.xpath("descendant::ds:Transform", NAMESPACES))
-    end
-
-    def validate_digest_value
-      unless digest_value == calculate_digest_value
-        errors << :digest_value
-      end
+    def validate_digest_values
+      references.each(&:validate_digest_value)
     end
 
     def validate_signature_value(certificate)
@@ -134,7 +86,7 @@ module Xmldsig
       end
 
       unless signature_valid
-        errors << :signature
+        @errors << :signature
       end
     end
   end

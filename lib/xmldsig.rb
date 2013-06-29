@@ -8,6 +8,7 @@ require "xmldsig/transforms/transform"
 require "xmldsig/transforms/canonicalize"
 require "xmldsig/transforms/enveloped_signature"
 require "xmldsig/transforms"
+require "xmldsig/reference"
 require "xmldsig/signature"
 
 module Xmldsig

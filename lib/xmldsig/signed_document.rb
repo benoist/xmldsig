@@ -16,7 +16,7 @@ module Xmldsig
     end
 
     def signed_nodes
-      signatures.collect(&:referenced_node)
+      signatures.flat_map(&:references).map(&:referenced_node)
     end
 
     def signatures
