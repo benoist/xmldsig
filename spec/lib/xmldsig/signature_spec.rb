@@ -8,37 +8,6 @@ describe Xmldsig::Signature do
   let(:signature_node) { document.at_xpath("//ds:Signature", Xmldsig::NAMESPACES) }
   let(:signature) { Xmldsig::Signature.new(signature_node) }
 
-  describe "#digest_value" do
-    it "returns the digest value in the xml" do
-      signature.digest_value.should == Base64.decode64("ftoSYFdze1AWgGHF5N9i9SFKThXkqH2AdyzA3/epbJw=")
-    end
-  end
-
-  describe "#document" do
-    it "returns the document" do
-      signature.document.should == document
-    end
-  end
-
-  describe "#referenced_node" do
-    it "returns the referenced_node by id" do
-      signature.referenced_node.to_s.should ==
-          document.at_xpath("//*[@ID='foo']").to_s
-    end
-
-    it "returns the referenced node by parent" do
-      signature.stub(:reference_uri).and_return("")
-      signature.referenced_node.to_s.should ==
-          document.root.to_s
-    end
-  end
-
-  describe "#reference_uri" do
-    it "returns the reference uri" do
-      signature.reference_uri.should == "#foo"
-    end
-  end
-
   describe "#sign" do
     let(:document) { Nokogiri::XML::Document.parse File.read("spec/fixtures/unsigned.xml") }
     let(:signature_node) { document.at_xpath("//ds:Signature", Xmldsig::NAMESPACES) }
@@ -49,7 +18,7 @@ describe Xmldsig::Signature do
     end
 
     it "sets the digest value" do
-      signature.digest_value.should == Base64.decode64("ftoSYFdze1AWgGHF5N9i9SFKThXkqH2AdyzA3/epbJw=")
+      signature.references.first.digest_value.should == Base64.decode64("ftoSYFdze1AWgGHF5N9i9SFKThXkqH2AdyzA3/epbJw=")
     end
 
     it "sets the signature value" do
@@ -72,6 +41,21 @@ describe Xmldsig::Signature do
       ")
     end
 
+    describe "multiple references" do
+      let(:document) { Nokogiri::XML::Document.parse File.read("spec/fixtures/unsigned_multiple_references.xml") }
+
+      it "can sign the document" do
+        signature.sign(private_key)
+        signature.should be_valid(certificate)
+      end
+
+      it "gets a digest per reference" do
+        signature.references.count.should be == 2
+        signature.sign(private_key)
+        signature.references[0].digest_value.should be == Base64.decode64("P1nUq8Y/LPmd+EON/mcNMNRjT78=")
+        signature.references[1].digest_value.should be == Base64.decode64("RoGAaQeuNJuDMWcgsD7RuGbFACo=")
+      end
+    end
   end
 
   describe "#signed_info" do
@@ -94,7 +78,9 @@ describe Xmldsig::Signature do
     end
 
     it "returns false if the xml changed" do
-      signature.stub(:document).and_return(Nokogiri::XML::Document.parse(File.read("spec/fixtures/signed.xml").gsub("\s\s", "\s")))
+      signature.references.first.stub(:document).and_return(
+        Nokogiri::XML::Document.parse(File.read("spec/fixtures/signed.xml").gsub("\s\s", "\s"))
+      )
       signature.valid?(certificate)
       signature.errors.should include(:digest_value)
     end
