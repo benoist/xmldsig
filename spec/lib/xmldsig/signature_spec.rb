@@ -33,15 +33,22 @@ describe Xmldsig::Signature do
     end
 
     it "returns the reference node when using WS-Security style id attribute" do
-      document.xpath('//*[@ID]').each do |n|
-        n.add_namespace('wsu', Xmldsig::NAMESPACES['wsu'])
-        n['wsu:Id'] = n['ID']
-        n.remove_attribute('ID')
-      end
+      node = document.at_xpath('//*[@ID]')
+      node.add_namespace('wsu', Xmldsig::NAMESPACES['wsu'])
+      node['wsu:Id'] = node['ID']
+      node.remove_attribute('ID')
 
       signature.referenced_node.
         attribute_with_ns('Id', Xmldsig::NAMESPACES['wsu']).value.
         should == 'foo'
+    end
+
+    it "raises ReferencedNodeNotFound when the refenced node is not precent" do
+      node = document.at_xpath('//*[@ID]')
+      node.remove_attribute('ID')
+
+      expect { signature.referenced_node }.
+        to raise_error(Xmldsig::Signature::ReferencedNodeNotFound)
     end
   end
 

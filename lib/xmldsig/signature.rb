@@ -2,6 +2,8 @@ module Xmldsig
   class Signature
     attr_accessor :signature, :errors
 
+    class ReferencedNodeNotFound < Exception; end
+
     def initialize(signature)
       @signature = signature
       @errors    = []
@@ -18,9 +20,16 @@ module Xmldsig
     def referenced_node
       if reference_uri && reference_uri != ""
         id = reference_uri[1..-1]
-        document.dup.at_xpath(
+        if ref = document.dup.at_xpath(
           "//*[@ID='#{id}' or @wsu:Id='#{id}']", NAMESPACES
         )
+          ref
+        else
+          raise(
+            ReferencedNodeNotFound,
+            "Could not find the referenced node #{id}'"
+          )
+        end
       else
         document.dup.root
       end
