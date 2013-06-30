@@ -48,7 +48,7 @@ describe Xmldsig::Reference do
         should == 'foo'
     end
 
-    it "raises ReferencedNodeNotFound when the refenced node is not precent" do
+    it "raises ReferencedNodeNotFound when the refenced node is not present" do
       node = document.at_xpath('//*[@ID]')
       node.remove_attribute('ID')
 
