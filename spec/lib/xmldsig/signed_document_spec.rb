@@ -17,8 +17,15 @@ describe Xmldsig::SignedDocument do
   end
 
   describe "#signatures" do
+    let(:unsigned_xml) { File.read("spec/fixtures/unsigned_nested_signature.xml") }
+    let(:unsigned_document) { Xmldsig::SignedDocument.new(unsigned_xml) }
+
     it "returns only the signed nodes" do
       signed_document.signatures.should be_all { |signature| signature.is_a?(Xmldsig::Signature) }
+    end
+
+    it "returns the nested signatures first" do
+      unsigned_document.signatures.first.references.first.reference_uri.should == '#baz'
     end
   end
 
@@ -36,7 +43,7 @@ describe Xmldsig::SignedDocument do
     it "returns false if the certificate is not valid" do
       signed_document.validate(other_certificate).should be_false
     end
-    
+
     it "returns false if there are no signatures and validation is strict" do
       xml_without_signature = Xmldsig::SignedDocument.new('<foo></foo>')
       xml_without_signature.validate(certificate).should be_false
