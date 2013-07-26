@@ -16,8 +16,9 @@ module Xmldsig
       references.flat_map(&:errors) + @errors
     end
 
-    def sign(private_key = nil, &block)
+    def sign(private_key = nil, certificate = nil, &block)
       references.each(&:sign)
+      self.x509_certificate = certificate if certificate
       self.signature_value = calculate_signature_value(private_key, &block)
     end
 
@@ -27,6 +28,10 @@ module Xmldsig
 
     def signature_value
       Base64.decode64 signature.at_xpath("descendant::ds:SignatureValue", NAMESPACES).content
+    end
+
+    def x509_certificate
+      signature.at_xpath("descendant::ds:X509Certificate", NAMESPACES).content
     end
 
     def valid?(certificate = nil, &block)
@@ -72,6 +77,11 @@ module Xmldsig
     def signature_value=(signature_value)
       signature.at_xpath("descendant::ds:SignatureValue", NAMESPACES).content =
           Base64.encode64(signature_value).chomp
+    end
+
+    def x509_certificate=(certificate)
+      signature.at_xpath("descendant::ds:X509Certificate", NAMESPACES).content =
+          certificate.to_s.gsub("-----BEGIN CERTIFICATE-----\n", '').gsub("\n-----END CERTIFICATE-----\n", '').gsub("\n", '')
     end
 
     def validate_digest_values

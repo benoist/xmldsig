@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<foo:Foo xmlns:foo="http://example.com/foo#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:ec="http://www.w3.org/2001/10/xml-exc-c14n#" ID="foo">
+  <foo:Bar>bar</foo:Bar>
+  <ds:Signature>
+    <ds:SignedInfo>
+      <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+      <ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+      <ds:Reference URI="#foo">
+        <ds:Transforms>
+          <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+          <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
+            <ec:InclusiveNamespaces PrefixList="foo"/>
+          </ds:Transform>
+        </ds:Transforms>
+        <ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <ds:DigestValue>ftoSYFdze1AWgGHF5N9i9SFKThXkqH2AdyzA3/epbJw=</ds:DigestValue>
+      </ds:Reference>
+    </ds:SignedInfo>
+    <ds:SignatureValue>E3yyqsSoxRkhYEuaEtR+SLg85gU5B4a7xUXA+d2Zn6j7F6z73dOd8iYHOusB
+Ty3C/3ujbmPhHKg8uX9kUE8b+YoOqZt4z9pdxAq44nJEuijwi4doIPpHWirv
+BnSoP5IoL0DYzGVrgj8udRzfAw5nNeV7wSrBZEn+yrxmUPJoUZc=</ds:SignatureValue>
+    <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+      <ds:X509Data>
+        <ds:X509Certificate xmlns:ds="http://www.w3.org/2000/09/xmldsig#">MIICgjCCAeugAwIBAgIBADANBgkqhkiG9w0BAQUFADA6MQswCQYDVQQGEwJCRTENMAsGA1UECgwEVGVzdDENMAsGA1UECwwEVGVzdDENMAsGA1UEAwwEVGVzdDAeFw0xMzAxMTMxNTMzNDNaFw0xNDAxMTMxNTMzNDNaMDoxCzAJBgNVBAYTAkJFMQ0wCwYDVQQKDARUZXN0MQ0wCwYDVQQLDARUZXN0MQ0wCwYDVQQDDARUZXN0MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC37C0mhTmdr8iVfQPQuOKtzG/fhwG4ILuUX1Vk5uN9oSZJxhb5Kn8aBppny1BSekgk12wn4AE/6i7Jfix3SZWoqdaxpdDalvQSdNeyn6GmV2oP4lzp6XjXmtRxvOywgTYuhf/DBlpiq7B/vTF7kMwYgs0ahM3mRJG2V7LARTXUfwIDAQABo4GXMIGUMA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYEFBRkMx3ZwHO3Zog0pWdYNB38NRmWMGIGA1UdIwRbMFmAFBRkMx3ZwHO3Zog0pWdYNB38NRmWoT6kPDA6MQswCQYDVQQGEwJCRTENMAsGA1UECgwEVGVzdDENMAsGA1UECwwEVGVzdDENMAsGA1UEAwwEVGVzdIIBADANBgkqhkiG9w0BAQUFAAOBgQBs8voSBDgN7HL1i5EP+G/ymWUVenpGvRZCnfkR9Wo4ORzj1Y7ohXHooOzDJ2oi0yDwatXnPpe3hauqQDid6d4i7F1Wpgdo2MibqXP8/DPzhuBARvPSzip+yS6ITjqKN/YN4K+kpja2Sh7DdxWND3opvVHZTXywjZpdF1OsmNhOCg==</ds:X509Certificate>
+      </ds:X509Data>
+    </ds:KeyInfo>
+  </ds:Signature>
+</foo:Foo>
