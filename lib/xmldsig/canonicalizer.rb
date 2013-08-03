@@ -2,7 +2,7 @@ module Xmldsig
   class Canonicalizer
     attr_accessor :node, :method, :inclusive_namespaces
 
-    def initialize(node, method, inclusive_namespaces = [])
+    def initialize(node, method = nil, inclusive_namespaces = [])
       @node = node
       @method = method
       @inclusive_namespaces = inclusive_namespaces
@@ -22,6 +22,8 @@ module Xmldsig
           Nokogiri::XML::XML_C14N_1_0
         when "http://www.w3.org/2006/12/xml-c14n11"
           Nokogiri::XML::XML_C14N_1_1
+        else
+          Nokogiri::XML::XML_C14N_1_0
       end
     end
   end

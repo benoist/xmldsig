@@ -2,7 +2,8 @@ module Xmldsig
   class Reference
     attr_accessor :reference, :errors
 
-    class ReferencedNodeNotFound < Exception; end
+    class ReferencedNodeNotFound < Exception;
+    end
 
     def initialize(reference)
       @reference = reference
@@ -24,8 +25,8 @@ module Xmldsig
           ref
         else
           raise(
-            ReferencedNodeNotFound,
-            "Could not find the referenced node #{id}'"
+              ReferencedNodeNotFound,
+              "Could not find the referenced node #{id}'"
           )
         end
       else
@@ -42,8 +43,13 @@ module Xmldsig
     end
 
     def calculate_digest_value
-      node = transforms.apply(referenced_node)
-      digest_method.digest node
+      transformed = transforms.apply(referenced_node)
+      case transformed
+        when String
+          digest_method.digest transformed
+        when Nokogiri::XML::Node
+          digest_method.digest Canonicalizer.new(transformed).canonicalize
+      end
     end
 
     def digest_method
@@ -58,7 +64,7 @@ module Xmldsig
 
     def digest_value=(digest_value)
       reference.at_xpath("descendant::ds:DigestValue", NAMESPACES).content =
-        Base64.encode64(digest_value).chomp
+          Base64.encode64(digest_value).chomp
     end
 
     def transforms
