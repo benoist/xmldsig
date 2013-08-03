@@ -68,6 +68,18 @@ describe Xmldsig::SignedDocument do
       end
       Xmldsig::SignedDocument.new(signed_document).validate(certificate).should be_true
     end
+
+    describe "with an optional certificate" do
+      let(:unsigned_certificate_xml) { File.read("spec/fixtures/unsigned_certificate.xml") }
+      let(:unsigned_certificate_document) { Xmldsig::SignedDocument.new(unsigned_certificate_xml) }
+      let(:signed_xml) { File.read("spec/fixtures/signed_certificate.xml") }
+      let(:certificate) { OpenSSL::X509::Certificate.new(File.read("spec/fixtures/certificate.cer")) }
+
+      it "returns a signed document" do
+        signed_document = unsigned_certificate_document.sign(private_key, certificate)
+        signed_document.should eq(signed_xml)
+      end
+    end
   end
 
 

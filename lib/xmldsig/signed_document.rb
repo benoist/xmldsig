@@ -10,8 +10,8 @@ module Xmldsig
       signatures.any? && signatures.all? { |signature| signature.valid?(certificate, &block) }
     end
 
-    def sign(private_key = nil, &block)
-      signatures.each { |signature| signature.sign(private_key, &block) }
+    def sign(private_key = nil, certificate = nil, &block)
+      signatures.each { |signature| signature.sign(private_key, certificate, &block) }
       @document.to_s
     end
 
