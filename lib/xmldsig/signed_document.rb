@@ -20,7 +20,7 @@ module Xmldsig
     end
 
     def signatures
-      document.xpath("//ds:Signature", NAMESPACES).collect { |node| Signature.new(node) } || []
+      document.xpath("//ds:Signature", NAMESPACES).reverse.collect { |node| Signature.new(node) } || []
     end
   end
 end
