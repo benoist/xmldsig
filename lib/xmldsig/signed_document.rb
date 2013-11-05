@@ -12,7 +12,7 @@ module Xmldsig
 
     def sign(private_key = nil, instruct = true, &block)
       signatures.each { |signature| signature.sign(private_key, &block) }
-      instruct == false ? @document.root.to_s : @document.to_s
+      instruct ? @document.to_s : @document.root.to_s
     end
 
     def signed_nodes
