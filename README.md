@@ -67,6 +67,10 @@ signed_document.validate do |signature_value, data|
 end
 ```
 
+## Known issues
+
+1. Windows in app purchase verification requires extra whitespace removal: https://github.com/benoist/xmldsig/issues/13
+
 ## Contributing
 
 1. Fork it
