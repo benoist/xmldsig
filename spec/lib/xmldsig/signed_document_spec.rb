@@ -49,36 +49,36 @@ describe Xmldsig::SignedDocument do
 
   describe "#validate" do
     it "returns true if the signature and digest value are correct" do
-      signed_document.validate(certificate).should be_true
+      signed_document.validate(certificate).should be == true
     end
 
     it "returns false if the certificate is not valid" do
-      signed_document.validate(other_certificate).should be_false
+      signed_document.validate(other_certificate).should be == false
     end
 
     it "returns false if there are no signatures and validation is strict" do
       xml_without_signature = Xmldsig::SignedDocument.new('<foo></foo>')
-      xml_without_signature.validate(certificate).should be_false
+      xml_without_signature.validate(certificate).should be == false
     end
 
     it "accepts a block" do
       signed_document.validate do |signature_value, data|
         certificate.public_key.verify(OpenSSL::Digest::SHA256.new, signature_value, data)
-      end.should be_true
+      end.should be == true
     end
   end
 
   describe "#sign" do
     it "returns a signed document" do
       signed_document = unsigned_document.sign(private_key)
-      Xmldsig::SignedDocument.new(signed_document).validate(certificate).should be_true
+      Xmldsig::SignedDocument.new(signed_document).validate(certificate).should be == true
     end
 
     it "accepts a block" do
       signed_document = unsigned_document.sign do |data|
         private_key.sign(OpenSSL::Digest::SHA256.new, data)
       end
-      Xmldsig::SignedDocument.new(signed_document).validate(certificate).should be_true
+      Xmldsig::SignedDocument.new(signed_document).validate(certificate).should be == true
     end
   end
 
@@ -89,7 +89,7 @@ describe Xmldsig::SignedDocument do
     let(:signed_document) { unsigned_document.sign(private_key) }
 
     it "when signed should be valid" do
-      Xmldsig::SignedDocument.new(signed_document).validate(certificate).should be_true
+      Xmldsig::SignedDocument.new(signed_document).validate(certificate).should be == true
     end
 
     it "should sign 2 elements" do
@@ -98,8 +98,8 @@ describe Xmldsig::SignedDocument do
 
     it "allows individual signs" do
       unsigned_document.signatures.last.sign(private_key)
-      unsigned_document.validate(certificate).should be_false
-      unsigned_document.signatures.last.valid?(certificate).should be_true
+      unsigned_document.validate(certificate).should be == false
+      unsigned_document.signatures.last.valid?(certificate).should be == true
     end
   end
 

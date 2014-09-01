@@ -74,7 +74,7 @@ describe Xmldsig::Signature do
 
   describe "#valid?" do
     it "returns true with the correct certificate" do
-      signature.valid?(certificate).should be_true
+      signature.valid?(certificate).should be == true
     end
 
     it "returns false if the xml changed" do
@@ -86,7 +86,7 @@ describe Xmldsig::Signature do
     end
 
     it "returns false with a difference certificate" do
-      signature.valid?(other_certificate).should be_false
+      signature.valid?(other_certificate).should be == false
     end
 
     it "accepts a block" do

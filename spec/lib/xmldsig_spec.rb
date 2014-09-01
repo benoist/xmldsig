@@ -12,7 +12,7 @@ describe Xmldsig do
         let(:signed_document) { unsigned_document.sign(private_key) }
 
         it "should be signable an validateable" do
-          Xmldsig::SignedDocument.new(signed_document).validate(certificate).should be_true
+          Xmldsig::SignedDocument.new(signed_document).validate(certificate).should be == true
         end
 
         it 'should have a signature element' do
@@ -38,7 +38,7 @@ describe Xmldsig do
         let(:certificate) { OpenSSL::X509::Certificate.new(File.read(document.gsub('.txt', '.cert'))) }
 
         it "should be validateable" do
-          signed_document.validate(certificate).should be_true
+          signed_document.validate(certificate).should be == true
         end
       end
     end
