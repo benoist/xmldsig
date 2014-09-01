@@ -14,6 +14,18 @@ describe Xmldsig::SignedDocument do
       document = described_class.new(signed_xml)
       document.document.should be_a(Nokogiri::XML::Document)
     end
+
+    it "raises on badly formed XML" do
+      badly_formed = <<-EOXML
+      <root>
+        <open>foo
+          <closed>bar</closed>
+      </root>
+      EOXML
+      expect {
+        described_class.new(badly_formed)
+      }.to raise_error
+    end
   end
 
   describe "#signatures" do
