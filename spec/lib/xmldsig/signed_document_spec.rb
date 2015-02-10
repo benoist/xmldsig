@@ -26,6 +26,12 @@ describe Xmldsig::SignedDocument do
         described_class.new(badly_formed)
       }.to raise_error
     end
+
+    it "accepts a nokogiri document" do
+      doc = Nokogiri::XML(unsigned_xml)
+      signed_document = described_class.new(doc)
+      signed_document.document.should be_a(Nokogiri::XML::Document)
+    end
   end
 
   describe "#signatures" do

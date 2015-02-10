@@ -3,7 +3,11 @@ module Xmldsig
     attr_accessor :document
 
     def initialize(document, options = {})
-      @document = Nokogiri::XML(document, nil, nil, Nokogiri::XML::ParseOptions::STRICT)
+      @document = if document.kind_of?(Nokogiri::XML::Document)
+        document
+      else
+        Nokogiri::XML(document, nil, nil, Nokogiri::XML::ParseOptions::STRICT)
+      end
     end
 
     def validate(certificate = nil, &block)
