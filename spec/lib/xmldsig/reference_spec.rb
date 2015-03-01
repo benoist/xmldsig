@@ -48,6 +48,16 @@ describe Xmldsig::Reference do
         should == 'foo'
     end
 
+    it "returns the reference node when using a custom id attribute" do
+      node = document.at_xpath('//*[@ID]')
+      node.remove_attribute('ID')
+      node.set_attribute('MyID', 'foo')
+      reference = Xmldsig::Reference.new(document.at_xpath('//ds:Reference', Xmldsig::NAMESPACES), 'MyID')
+
+      reference.referenced_node.to_s.should ==
+        document.at_xpath("//*[@MyID='foo']").to_s
+    end
+
     it "raises ReferencedNodeNotFound when the refenced node is not present" do
       node = document.at_xpath('//*[@ID]')
       node.remove_attribute('ID')

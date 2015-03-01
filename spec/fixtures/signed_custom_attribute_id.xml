@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<foo:Foo xmlns:foo="http://example.com/foo#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:ec="http://www.w3.org/2001/10/xml-exc-c14n#" MyID="foo">
+  <foo:Bar>bar</foo:Bar>
+  <ds:Signature>
+    <ds:SignedInfo>
+      <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+      <ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+      <ds:Reference URI="#foo">
+        <ds:Transforms>
+          <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+          <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
+            <ec:InclusiveNamespaces PrefixList="foo"/>
+          </ds:Transform>
+        </ds:Transforms>
+        <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+        <ds:DigestValue>/GxRLc5AEfTmGlQFGC++jLfhJNE=</ds:DigestValue>
+      </ds:Reference>
+    </ds:SignedInfo>
+    <ds:SignatureValue>QRr9nX1iGo0OwKsxOMsvoMQ8oWtl5NS9w8JzF3/+DcbLU1oNriaNKM7HixPH
+TQyyPgwn1Ysvyf0twWhiZ7TnPQ71EFcJFKCexGGC6SaChSIIJjnVukmUC6Le
+NdazERYV+QZZV5pmq5EfgW3RfDOinBXsMRuTDR8y1iG6K1gMKws=</ds:SignatureValue>
+  </ds:Signature>
+</foo:Foo>

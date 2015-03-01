@@ -44,4 +44,37 @@ describe Xmldsig do
     end
   end
 
+  describe "Allows specifying a custom id attribute" do
+    context "an unsigned document" do
+      let(:unsigned_xml) { File.read("spec/fixtures/unsigned_custom_attribute_id.xml") }
+      let(:unsigned_document) { Xmldsig::SignedDocument.new(unsigned_xml, :id_attr => 'MyID') }
+      let(:signed_document) { unsigned_document.sign(private_key) }
+
+      it "should be signable an validateable" do
+        Xmldsig::SignedDocument.new(signed_document, :id_attr => 'MyID').validate(certificate).should be == true
+      end
+
+      it 'should have a signature element' do
+        Xmldsig::SignedDocument.new(signed_document, :id_attr => 'MyID').signatures.count.should == 1
+      end
+
+      # TODO: remove this verification step when library matures
+      # it 'matches the result from xmlsec1' do
+      #   document = "spec/fixtures/unsigned_custom_attribute_id.xml"
+      #   result = `xmlsec1 --sign --privkey-pem spec/fixtures/key.pem --id-attr:MyID Foo #{document}`
+      #   result.gsub!("\n", '')
+      #   signed_document.gsub!("\n", '')
+      #   result.should == signed_document
+      # end
+    end
+
+    context "a signed document" do
+      let(:signed_xml) { File.read("spec/fixtures/signed_custom_attribute_id.xml") }
+      let(:signed_document) { Xmldsig::SignedDocument.new(signed_xml, :id_attr => 'MyID') }
+
+      it "should be validateable" do
+        signed_document.validate(certificate).should be == true
+      end
+    end
+  end
 end
