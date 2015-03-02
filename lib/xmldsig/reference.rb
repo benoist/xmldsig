@@ -1,13 +1,14 @@
 module Xmldsig
   class Reference
-    attr_accessor :reference, :errors
+    attr_accessor :reference, :errors, :id_attr
 
     class ReferencedNodeNotFound < Exception;
     end
 
-    def initialize(reference)
+    def initialize(reference, id_attr = nil)
       @reference = reference
       @errors    = []
+      @id_attr = id_attr
     end
 
     def document
@@ -21,7 +22,8 @@ module Xmldsig
     def referenced_node
       if reference_uri && reference_uri != ""
         id = reference_uri[1..-1]
-        if ref = document.dup.at_xpath("//*[@ID='#{id}' or @wsu:Id='#{id}']", NAMESPACES)
+        referenced_node_xpath = @id_attr ? "//*[@#{@id_attr}='#{id}']" : "//*[@ID='#{id}' or @wsu:Id='#{id}']"
+        if ref = document.dup.at_xpath(referenced_node_xpath, NAMESPACES)
           ref
         else
           raise(
