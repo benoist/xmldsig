@@ -1,0 +1,22 @@
+<saml2p:Response xmlns:saml2p="urn:oasis:names:tc:SAML:2.0:protocol" Destination="http://lvh.me:3000/saml/consume" ID="_70566d518f1655ba37985b23f7169298" InResponseTo="_9a0411fe3d0cf28644525a3e39469a23368c082e" IssueInstant="2015-04-20T07:37:25.323Z" Version="2.0">
+  <saml2:Issuer xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" Format="urn:oasis:names:tc:SAML:2.0:nameid-format:entity">https://shibboleth.vagrant.dev/idp/shibboleth
+  </saml2:Issuer>
+  <saml2p:Status>
+    <saml2p:StatusCode Value="urn:oasis:names:tc:SAML:2.0:status:Success"/>
+  </saml2p:Status>
+  <saml2:Assertion xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" ID="_f3be21a4420268b5a4d0f362b59079a4" IssueInstant="2015-04-20T07:37:25.323Z" Version="2.0"><saml2:Issuer Format="urn:oasis:names:tc:SAML:2.0:nameid-format:entity">https://shibboleth.vagrant.dev/idp/shibboleth</saml2:Issuer><ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#"><ds:SignedInfo><ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/><ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/><ds:Reference URI="#_f3be21a4420268b5a4d0f362b59079a4"><ds:Transforms><ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/><ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/></ds:Transforms><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>HZfcJ8WkEGokMWQj00MKOUFSTu0=</ds:DigestValue></ds:Reference></ds:SignedInfo><ds:SignatureValue>eEL7t2VTTgSoUTzIpf+OYm3CrTJq6A+EEIRAyNLxVEJkjNRY6abKRBhPNharJGBbsbEh9yVW0sRuIU9HFaidzNaFok2oFoX7gm5nMhBL3n3bEmijWFastoc3PQOKYnATXziCfnyRq44rVaqrjKfYOdvifhZ8gjiBExEBHCoJkRp7jiMvbPqy31qAsNzL/IHZLDv5QILCi8iqjVdhNvdOh/2ajKYLrEiSUEb6Wv/8SxOWjMeSrkTLGJ7l0oWaJWeSCCwE3+2+ssBxWsHLOUTf7x9dRsR9RkliTA1zp22EpUpzTgBRnFrnxpLwCG5Iod0/pP+/klpoZ5pnS0U8c0fObg==</ds:SignatureValue><ds:KeyInfo><ds:X509Data><ds:X509Certificate>MIIDRDCCAiygAwIBAgIVAOBBjAUVutk42CWL0RcirPc0cv9/MA0GCSqGSIb3DQEBBQUAMCExHzAd
+BgNVBAMTFnNoaWJib2xldGgudmFncmFudC5kZXYwHhcNMTUwNDIwMDcyOTQ1WhcNMzUwNDIwMDcy
+OTQ1WjAhMR8wHQYDVQQDExZzaGliYm9sZXRoLnZhZ3JhbnQuZGV2MIIBIjANBgkqhkiG9w0BAQEF
+AAOCAQ8AMIIBCgKCAQEAmyH0D44rQzlgYzHr7RvfhYwcPhYS+GaFGpBj2AZ5152NyTLn7L4UH/lj
+WvirJ16K5Qhl4S0vEdCnrtPB6HUfzw9h8iZABfvQ4O1VEkKIeJGskqKleItXdlWYR45d9ATGqFbg
+wIpUcUYkpnepi8pJd1etPxEVoDT6kFuabrQBXorJ/Q59+eHfFH8oYG8mEVS0bWwyxFu7Rz8GBRcm
+KmzVeObnGQY5izY69/drLK/NbEX1MZRVOpT2L6LbmLXEZZQ7jd/L2mfEjzDBxfQaTs8Fgnl6vqhb
+Me1l3ci5SyJObZ3UwXkFy4LDnezs7ghENoSzP6Ah/Sq58kwvWwJ5JTE/QwIDAQABo3MwcTBQBgNV
+HREESTBHghZzaGliYm9sZXRoLnZhZ3JhbnQuZGV2hi1odHRwczovL3NoaWJib2xldGgudmFncmFu
+dC5kZXYvaWRwL3NoaWJib2xldGgwHQYDVR0OBBYEFHSLABA1TYmg3IH2qUa/2E3yFh4XMA0GCSqG
+SIb3DQEBBQUAA4IBAQCMrVvvrEcLtlKZXAV03waZjopDeiq5ByVqLjbyHnmuPixFzvxGDfvRH3rR
+ITBTENNHoB6xDnYrw48F+RKtz58b01/SyMvVSQ6UAEtwq1aCxJdWdbfVeBEgbKcPAERQuOZdm13R
+Kod2iAu+jlfLIqwVlSgo9YPqw7cfZzXB6ZrKFtjA8SHEmv26Y67EXAUkXd8nXOwXV2MJehfhBwUA
+wLxnC7RuVcdR2LRgf7oXbgwiyCJXdNP8S93s2tdLb7+K+Em8iaw4c3wfrBMUWs00P1iUs0KJaCTd
+G++LODBKt9wGUIB/AJiV+o4WqRh/jxiybmCVSlNUqoAP8t05jrtm6clF</ds:X509Certificate></ds:X509Data></ds:KeyInfo></ds:Signature><saml2:Subject><saml2:NameID Format="urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified" NameQualifier="https://shibboleth.vagrant.dev/idp/shibboleth">shibadmin</saml2:NameID><saml2:SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer"><saml2:SubjectConfirmationData Address="192.168.66.1" InResponseTo="_9a0411fe3d0cf28644525a3e39469a23368c082e" NotOnOrAfter="2015-04-20T07:42:25.323Z" Recipient="http://lvh.me:3000/saml/consume"/></saml2:SubjectConfirmation></saml2:Subject><saml2:Conditions NotBefore="2015-04-20T07:37:25.323Z" NotOnOrAfter="2015-04-20T07:42:25.323Z"><saml2:AudienceRestriction><saml2:Audience>urn:testing:app</saml2:Audience></saml2:AudienceRestriction></saml2:Conditions><saml2:AuthnStatement AuthnInstant="2015-04-20T07:31:04.345Z" SessionIndex="_a2388aad0bff623245c6ae72576004e6"><saml2:SubjectLocality Address="192.168.66.1"/><saml2:AuthnContext><saml2:AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport</saml2:AuthnContextClassRef></saml2:AuthnContext></saml2:AuthnStatement></saml2:Assertion>
+</saml2p:Response>

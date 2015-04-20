@@ -42,6 +42,17 @@ describe Xmldsig do
         end
       end
     end
+    Dir["spec/fixtures/signed/*.xml"].each do |document|
+      describe "#{document}" do
+        let(:signed_xml) { File.read(document) }
+        let(:signed_document) { Xmldsig::SignedDocument.new(signed_xml) }
+        let(:certificate) { OpenSSL::X509::Certificate.new(File.read(document.gsub('.xml', '.cert'))) }
+
+        it "should be validateable" do
+          expect(signed_document.validate(certificate)).to be == true
+        end
+      end
+    end
   end
 
   describe "Allows specifying a custom id attribute" do
