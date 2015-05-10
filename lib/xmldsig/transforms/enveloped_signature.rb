@@ -2,7 +2,10 @@ module Xmldsig
   class Transforms < Array
     class EnvelopedSignature < Transform
       def transform
-        node.xpath("descendant::ds:Signature", Xmldsig::NAMESPACES).first.remove
+        signatures = node.xpath("descendant::ds:Signature", Xmldsig::NAMESPACES).
+            sort { |left, right| left.ancestors.size <=> right.ancestors.size }
+
+        signatures.first.remove
         node
       end
     end

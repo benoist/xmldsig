@@ -16,7 +16,7 @@ module Xmldsig
     end
 
     def sign(private_key = nil, instruct = true, &block)
-      signatures.each { |signature| signature.sign(private_key, &block) }
+      signatures.reverse.each { |signature| signature.sign(private_key, &block) }
       instruct ? @document.to_s : @document.root.to_s
     end
 
@@ -25,7 +25,9 @@ module Xmldsig
     end
 
     def signatures
-      document.xpath("//ds:Signature", NAMESPACES).reverse.collect { |node| Signature.new(node, @id_attr) } || []
+      document.xpath("//ds:Signature", NAMESPACES).
+          sort { |left, right| left.ancestors.size <=> right.ancestors.size }.
+          collect { |node| Signature.new(node, @id_attr) } || []
     end
   end
 end

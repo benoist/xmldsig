@@ -42,8 +42,8 @@ describe Xmldsig::SignedDocument do
       signed_document.signatures.should be_all { |signature| signature.is_a?(Xmldsig::Signature) }
     end
 
-    it "returns the nested signatures first" do
-      unsigned_document.signatures.first.references.first.reference_uri.should == '#baz'
+    it "returns the outer signatures first" do
+      unsigned_document.signatures.first.references.first.reference_uri.should == '#foo'
     end
   end
 

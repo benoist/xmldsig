@@ -15,17 +15,18 @@ describe Xmldsig do
           Xmldsig::SignedDocument.new(signed_document).validate(certificate).should be == true
         end
 
-        it 'should have a signature element' do
-          Xmldsig::SignedDocument.new(signed_document).signatures.count.should == 1
+        it 'should have at least 1 signature element' do
+          Xmldsig::SignedDocument.new(signed_document).signatures.count.should >= 1
         end
 
         # TODO: remove this verification step when library matures
-        #it 'matches the result from xmlsec1' do
+        # it 'matches the result from xmlsec1' do
         #  result = `xmlsec1 --sign --id-attr:ID http://example.com/foo#:Foo --privkey-pem spec/fixtures/key.pem #{document}`
         #  result.gsub!("\n", '')
         #  signed_document.gsub!("\n", '')
+        #  puts result
         #  result.should == signed_document
-        #end
+        # end
       end
     end
   end
