@@ -65,6 +65,16 @@ describe Xmldsig::Reference do
       expect { reference.referenced_node }.
         to raise_error(Xmldsig::Reference::ReferencedNodeNotFound)
     end
+
+    it "raises ReferencedNodeNotFound when the reference node is malicious" do
+      malicious_document = Nokogiri::XML::Document.parse File.read("spec/fixtures/unsigned-malicious.xml")
+      node = document.at_xpath('//*[@ID]')
+      node.remove_attribute('ID')
+      node.set_attribute('MyID', 'foobar')
+      malicious_reference = Xmldsig::Reference.new(malicious_document.at_xpath('//ds:Reference', Xmldsig::NAMESPACES), 'MyID')
+      expect { malicious_reference.referenced_node }.
+        to raise_error(Xmldsig::Reference::ReferencedNodeNotFound)
+    end
   end
 
   describe "#reference_uri" do
