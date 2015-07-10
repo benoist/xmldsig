@@ -24,7 +24,7 @@ module Xmldsig
         id = reference_uri[1..-1]
         referenced_node_xpath = @id_attr ? "//*[@$idattr=$uri]" : "//*[@ID=$uri or @wsu:Id=$uri]"
         variable_bindings = { 'uri' => id }
-        variable_bindings['idattr'] = @id_attr
+        variable_bindings['idattr'] = @id_attr if @id_attr
         if ref = document.dup.at_xpath(referenced_node_xpath, NAMESPACES, variable_bindings)
           ref
         else
