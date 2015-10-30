@@ -72,6 +72,13 @@ describe Xmldsig::SignedDocument do
         certificate.public_key.verify(OpenSSL::Digest::SHA256.new, signature_value, data)
       end.should be == true
     end
+
+    it "validates a document with a http://www.w3.org/2001/10/xml-exc-c14n#WithComments transform" do
+      unsigned_xml_with_comments = File.read("spec/fixtures/signed_xml-exc-c14n#with_comments.xml")
+      unsigned_documents_with_comments = Xmldsig::SignedDocument.new(unsigned_xml_with_comments)
+      signed_xml_with_comments = unsigned_documents_with_comments.sign(private_key)
+      Xmldsig::SignedDocument.new(signed_xml_with_comments).validate(certificate).should be == true
+    end
   end
 
   describe "#sign" do
