@@ -1,22 +1,24 @@
 module Xmldsig
   class Canonicalizer
-    attr_accessor :node, :method, :inclusive_namespaces
+    attr_accessor :node, :method, :inclusive_namespaces, :with_comments
 
-    def initialize(node, method = nil, inclusive_namespaces = [])
+    def initialize(node, method = nil, inclusive_namespaces = [], with_comments = false)
       @node = node
       @method = method
       @inclusive_namespaces = inclusive_namespaces
+      @with_comments = with_comments
     end
 
     def canonicalize
-      node.canonicalize(mode(method), inclusive_namespaces)
+      node.canonicalize(mode(method), inclusive_namespaces, with_comments)
     end
 
     private
 
     def mode(method)
       case method
-        when "http://www.w3.org/2001/10/xml-exc-c14n#"
+        when "http://www.w3.org/2001/10/xml-exc-c14n#",
+             "http://www.w3.org/2001/10/xml-exc-c14n#WithComments"
           Nokogiri::XML::XML_C14N_EXCLUSIVE_1_0
         when "http://www.w3.org/TR/2001/REC-xml-c14n-20010315"
           Nokogiri::XML::XML_C14N_1_0
