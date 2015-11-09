@@ -18,7 +18,6 @@
           </ds:Reference>
         </ds:SignedInfo>
         <ds:SignatureValue></ds:SignatureValue>
-        <ds:KeyInfo/>
       </ds:Signature>
       <samlp:Status>
         <samlp:StatusCode/>

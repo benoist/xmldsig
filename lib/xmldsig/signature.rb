@@ -33,6 +33,7 @@ module Xmldsig
     def valid?(certificate = nil, &block)
       @errors = []
       references.each { |r| r.errors = [] }
+      validate_schema
       validate_digest_values
       validate_signature_value(certificate, &block)
       errors.empty?
@@ -73,6 +74,12 @@ module Xmldsig
     def signature_value=(signature_value)
       signature.at_xpath("descendant::ds:SignatureValue", NAMESPACES).content =
           Base64.encode64(signature_value).chomp
+    end
+
+    def validate_schema
+      doc = Nokogiri::XML::Document.parse(signature.canonicalize)
+      errors = Nokogiri::XML::Schema.new(Xmldsig::XSD_FILE).validate(doc)
+      raise Xmldsig::SchemaError.new(errors.first.message) if errors.any?
     end
 
     def validate_digest_values

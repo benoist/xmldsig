@@ -18,15 +18,6 @@ describe Xmldsig do
         it 'should have at least 1 signature element' do
           Xmldsig::SignedDocument.new(signed_document).signatures.count.should >= 1
         end
-
-        # TODO: remove this verification step when library matures
-        # it 'matches the result from xmlsec1' do
-        #  result = `xmlsec1 --sign --id-attr:ID http://example.com/foo#:Foo --privkey-pem spec/fixtures/key.pem #{document}`
-        #  result.gsub!("\n", '')
-        #  signed_document.gsub!("\n", '')
-        #  puts result
-        #  result.should == signed_document
-        # end
       end
     end
   end
@@ -54,6 +45,16 @@ describe Xmldsig do
         end
       end
     end
+
+    context "with invalid xsd signature elemements" do
+      let(:signed_xml) { File.read('spec/fixtures/signed-with-xsd-error.xml') }
+      let(:signed_document) { Xmldsig::SignedDocument.new(signed_xml) }
+      let(:certificate) { OpenSSL::X509::Certificate.new(File.read('spec/fixtures/certificate.cer')) }
+
+      it "raises schema error" do
+        expect{ signed_document.validate(certificate) }.to raise_error(Xmldsig::SchemaError)
+      end
+    end
   end
 
   describe "Allows specifying a custom id attribute" do
@@ -69,15 +70,6 @@ describe Xmldsig do
       it 'should have a signature element' do
         Xmldsig::SignedDocument.new(signed_document, :id_attr => 'MyID').signatures.count.should == 1
       end
-
-      # TODO: remove this verification step when library matures
-      # it 'matches the result from xmlsec1' do
-      #   document = "spec/fixtures/unsigned_custom_attribute_id.xml"
-      #   result = `xmlsec1 --sign --privkey-pem spec/fixtures/key.pem --id-attr:MyID Foo #{document}`
-      #   result.gsub!("\n", '')
-      #   signed_document.gsub!("\n", '')
-      #   result.should == signed_document
-      # end
     end
 
     context "a signed document" do
