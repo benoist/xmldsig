@@ -1,5 +1,8 @@
 # Changelog
 
+v0.3.1 10-11-2015
+- Added the option to only sign the root signature with the `Xmldsig::SignedDocument#sign` method
+
 v0.2.9 10-07-2015
 - Use variable binding to create a custom XPath (Sean Bryant)
 
