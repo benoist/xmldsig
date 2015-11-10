@@ -93,8 +93,20 @@ describe Xmldsig::SignedDocument do
       end
       Xmldsig::SignedDocument.new(signed_document).validate(certificate).should be == true
     end
-  end
 
+    context 'with the root only option' do
+      let(:unsigned_xml) { File.read("spec/fixtures/unsigned_nested_signed_signature.xml") }
+      let(:unsigned_document) { Xmldsig::SignedDocument.new(unsigned_xml) }
+
+      let(:signed_xml) { unsigned_document.sign(private_key, true, true) }
+      let(:signed_document) { Xmldsig::SignedDocument.new(signed_xml) }
+
+      it 'only signs the root signature and leaves the nested signature intact' do
+        signed_document.signatures.first.valid?(certificate).should be == true
+        signed_document.signatures.last.signature_value.should be == unsigned_document.signatures.last.signature_value
+      end
+    end
+  end
 
   describe "Nested Signatures" do
     let(:unsigned_xml) { File.read("spec/fixtures/unsigned_nested_signature.xml") }

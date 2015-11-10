@@ -15,8 +15,12 @@ module Xmldsig
       signatures.any? && signatures.all? { |signature| signature.valid?(certificate, &block) }
     end
 
-    def sign(private_key = nil, instruct = true, &block)
-      signatures.reverse.each { |signature| signature.sign(private_key, &block) }
+    def sign(private_key = nil, instruct = true, root_only = false, &block)
+      if root_only
+        signatures.first.sign(private_key, &block)
+      else
+        signatures.reverse.each { |signature| signature.sign(private_key, &block) }
+      end
       instruct ? @document.to_s : @document.root.to_s
     end
 
