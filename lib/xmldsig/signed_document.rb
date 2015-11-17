@@ -21,7 +21,12 @@ module Xmldsig
       else
         signatures.reverse.each { |signature| signature.sign(private_key, &block) }
       end
-      instruct ? @document.to_s : @document.root.to_s
+
+      if instruct
+        @document.to_xml(save_with: Nokogiri::XML::Node::SaveOptions::AS_XML)
+      else
+        @document.to_xml(save_with: Nokogiri::XML::Node::SaveOptions::AS_XML | Nokogiri::XML::Node::SaveOptions::NO_DECLARATION)
+      end
     end
 
     def signed_nodes
