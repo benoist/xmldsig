@@ -1,5 +1,8 @@
 # Changelog
 
+v0.3.2 17-11-2015
+- After signing return the XML the correct way
+
 v0.3.1 10-11-2015
 - Added the option to only sign the root signature with the `Xmldsig::SignedDocument#sign` method
 
