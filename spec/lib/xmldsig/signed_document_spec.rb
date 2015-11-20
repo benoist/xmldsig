@@ -28,7 +28,7 @@ describe Xmldsig::SignedDocument do
     end
 
     it "accepts a nokogiri document" do
-      doc = Nokogiri::XML(unsigned_xml)
+      doc             = Nokogiri::XML(unsigned_xml)
       signed_document = described_class.new(doc)
       signed_document.document.should be_a(Nokogiri::XML::Document)
     end
@@ -74,9 +74,9 @@ describe Xmldsig::SignedDocument do
     end
 
     it "validates a document with a http://www.w3.org/2001/10/xml-exc-c14n#WithComments transform" do
-      unsigned_xml_with_comments = File.read("spec/fixtures/signed_xml-exc-c14n#with_comments.xml")
+      unsigned_xml_with_comments       = File.read("spec/fixtures/signed_xml-exc-c14n#with_comments.xml")
       unsigned_documents_with_comments = Xmldsig::SignedDocument.new(unsigned_xml_with_comments)
-      signed_xml_with_comments = unsigned_documents_with_comments.sign(private_key)
+      signed_xml_with_comments         = unsigned_documents_with_comments.sign(private_key)
       Xmldsig::SignedDocument.new(signed_xml_with_comments).validate(certificate).should be == true
     end
   end
@@ -94,16 +94,31 @@ describe Xmldsig::SignedDocument do
       Xmldsig::SignedDocument.new(signed_document).validate(certificate).should be == true
     end
 
-    context 'with the root only option' do
+    context 'with the force false' do
       let(:unsigned_xml) { File.read("spec/fixtures/unsigned_nested_signed_signature.xml") }
       let(:unsigned_document) { Xmldsig::SignedDocument.new(unsigned_xml) }
 
-      let(:signed_xml) { unsigned_document.sign(private_key, true, true) }
+      let(:signed_xml) { unsigned_document.sign(private_key) }
       let(:signed_document) { Xmldsig::SignedDocument.new(signed_xml) }
 
       it 'only signs the root signature and leaves the nested signature intact' do
         signed_document.signatures.first.valid?(certificate).should be == true
+        signed_document.signatures.last.valid?(certificate).should be == false
         signed_document.signatures.last.signature_value.should be == unsigned_document.signatures.last.signature_value
+      end
+    end
+
+    context 'with the force true' do
+      let(:unsigned_xml) { File.read("spec/fixtures/unsigned_nested_signed_signature.xml") }
+      let(:unsigned_document) { Xmldsig::SignedDocument.new(unsigned_xml, force: true) }
+
+      let(:signed_xml) { unsigned_document.sign(private_key) }
+      let(:signed_document) { Xmldsig::SignedDocument.new(signed_xml) }
+
+      it 'only signs the root signature and leaves the nested signature intact' do
+        signed_document.signatures.first.valid?(certificate).should be == true
+        signed_document.signatures.last.valid?(certificate).should be == true
+        signed_document.signatures.last.signature_value.should be != unsigned_document.signatures.last.signature_value
       end
     end
   end

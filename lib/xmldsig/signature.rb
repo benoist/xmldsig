@@ -39,6 +39,14 @@ module Xmldsig
       errors.empty?
     end
 
+    def signed?
+      !unsigned?
+    end
+
+    def unsigned?
+      self.signature_value.to_s.empty?
+    end
+
     private
 
     def canonicalization_method

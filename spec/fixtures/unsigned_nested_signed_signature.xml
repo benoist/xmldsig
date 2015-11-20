@@ -34,9 +34,7 @@
           <ds:DigestValue>ftoSYFdze1AWgGHF5N9i9SFKThXkqH2AdyzA3/epbJw=</ds:DigestValue>
         </ds:Reference>
       </ds:SignedInfo>
-      <ds:SignatureValue>E3yyqsSoxRkhYEuaEtR+SLg85gU5B4a7xUXA+d2Zn6j7F6z73dOd8iYHOusB
-  Ty3C/3ujbmPhHKg8uX9kUE8b+YoOqZt4z9pdxAq44nJEuijwi4doIPpHWirv
-  BnSoP5IoL0DYzGVrgj8udRzfAw5nNeV7wSrBZEn+yrxmUPJoUZc=</ds:SignatureValue>
+      <ds:SignatureValue>ftoSYFdze1AWgGHF5N9i9SFKThXkqH2AdyzA3/epbJw=</ds:SignatureValue>
     </ds:Signature>
   </foo:Foo>
 </baz:Baz>

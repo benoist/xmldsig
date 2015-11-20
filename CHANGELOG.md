@@ -1,5 +1,8 @@
 # Changelog
 
+v0.4.0 20-11-2015
+- Breaking change: Signing now leaves previously signed signatures in tact. Use Xmldsig::SignedDocument.new(unsigned_xml, force: true) to resign all signatures
+
 v0.3.2 17-11-2015
 - After signing return the XML the correct way
 

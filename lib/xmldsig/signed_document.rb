@@ -1,6 +1,6 @@
 module Xmldsig
   class SignedDocument
-    attr_accessor :document, :id_attr
+    attr_accessor :document, :id_attr, :force
 
     def initialize(document, options = {})
       @document = if document.kind_of?(Nokogiri::XML::Document)
@@ -8,18 +8,17 @@ module Xmldsig
       else
         Nokogiri::XML(document, nil, nil, Nokogiri::XML::ParseOptions::STRICT)
       end
-      @id_attr = options[:id_attr] if options[:id_attr]
+      @id_attr  = options[:id_attr] if options[:id_attr]
+      @force    = options[:force]
     end
 
     def validate(certificate = nil, &block)
       signatures.any? && signatures.all? { |signature| signature.valid?(certificate, &block) }
     end
 
-    def sign(private_key = nil, instruct = true, root_only = false, &block)
-      if root_only
-        signatures.first.sign(private_key, &block)
-      else
-        signatures.reverse.each { |signature| signature.sign(private_key, &block) }
+    def sign(private_key = nil, instruct = true, &block)
+      signatures.reverse.each do |signature|
+        signature.sign(private_key, &block) if signature.unsigned? || force
       end
 
       if instruct
