@@ -72,6 +72,10 @@ module Xmldsig
     def signature_method
       algorithm = signature_algorithm && signature_algorithm =~ /sha(.*?)$/i && $1.to_i
       case algorithm
+        when 512
+          OpenSSL::Digest::SHA512
+        when 384
+          OpenSSL::Digest::SHA384
         when 256 then
           OpenSSL::Digest::SHA256
         else

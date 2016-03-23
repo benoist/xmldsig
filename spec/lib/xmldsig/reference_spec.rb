@@ -82,4 +82,22 @@ describe Xmldsig::Reference do
       reference.reference_uri.should == "#foo"
     end
   end
+
+  ["sha1", "sha256", "sha512"].each do |algorithm|
+    describe "digest method #{algorithm}" do
+      let(:document) { Nokogiri::XML::Document.parse File.read("spec/fixtures/unsigned-#{algorithm}.xml") }
+      let(:reference) { Xmldsig::Reference.new(document.at_xpath('//ds:Reference', Xmldsig::NAMESPACES)) }
+
+      it "uses the correct digest algorithm" do
+        case algorithm
+        when "sha512"
+          reference.digest_method.should == Digest::SHA512
+        when "sha256"
+          reference.digest_method.should == Digest::SHA256
+        when "sha1"
+          reference.digest_method.should == Digest::SHA1
+        end
+      end
+    end
+  end
 end
