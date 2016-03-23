@@ -1,5 +1,8 @@
 # Changelog
 
+v0.4.1 22-03-2015
+- Added support for SHA256, SHA384 and SHA512 
+
 v0.4.0 20-11-2015
 - Breaking change: Signing now leaves previously signed signatures in tact. Use Xmldsig::SignedDocument.new(unsigned_xml, force: true) to resign all signatures
 
