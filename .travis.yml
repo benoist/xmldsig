@@ -2,11 +2,3 @@ language: ruby
 rvm:
   - 2.3.0
   - 2.2.4
-  - 2.0.0
-  - 1.9.3
-
-matrix:
-  allow_failures:
-    - rvm: 2.1.8
-    - rvm: 2.0.0
-    - rvm: 1.9.3
