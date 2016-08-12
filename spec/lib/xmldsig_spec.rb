@@ -52,7 +52,7 @@ describe Xmldsig do
       let(:certificate) { OpenSSL::X509::Certificate.new(File.read('spec/fixtures/certificate.cer')) }
 
       it "raises schema error" do
-        expect{ signed_document.validate(certificate) }.to raise_error(Xmldsig::SchemaError)
+        expect { signed_document.validate(certificate) }.to raise_error(Xmldsig::SchemaError)
       end
     end
   end

@@ -2,14 +2,6 @@ require "nokogiri"
 require "openssl"
 require "base64"
 require "xmldsig/version"
-require "xmldsig/canonicalizer"
-require "xmldsig/signed_document"
-require "xmldsig/transforms/transform"
-require "xmldsig/transforms/canonicalize"
-require "xmldsig/transforms/enveloped_signature"
-require "xmldsig/transforms"
-require "xmldsig/reference"
-require "xmldsig/signature"
 
 module Xmldsig
   NAMESPACES = {
@@ -26,3 +18,12 @@ module Xmldsig
 
   XSD_FILE = File.read(File.expand_path('../xmldsig/xmldsig-core-schema.xsd', __FILE__))
 end
+
+require "xmldsig/canonicalizer"
+require "xmldsig/signed_document"
+require "xmldsig/transforms/transform"
+require "xmldsig/transforms/canonicalize"
+require "xmldsig/transforms/enveloped_signature"
+require "xmldsig/transforms"
+require "xmldsig/reference"
+require "xmldsig/signature"
