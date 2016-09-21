@@ -17,7 +17,7 @@ module Xmldsig
         if inclusive_namespaces && inclusive_namespaces.has_attribute?("PrefixList")
           inclusive_namespaces.get_attribute("PrefixList").to_s.split(" ")
         else
-          []
+          nil
         end
       end
     end
