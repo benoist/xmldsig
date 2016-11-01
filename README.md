@@ -58,12 +58,12 @@ end
 # Validation
 
 signed_document = Xmldsig::SignedDocument.new(signed_xml)
-signed_document.validate(certificate)
+document_validates = signed_document.validate(certificate)
 
 # With block
 signed_document = Xmldsig::SignedDocument.new(signed_xml)
 signed_document.validate do |signature_value, data|
-  certificate.public_key.verify(OpenSSL::Digest::SHA256.new, signature_value, data)
+  document_validates = certificate.public_key.verify(OpenSSL::Digest::SHA256.new, signature_value, data)
 end
 
 # Custom ID attribute
