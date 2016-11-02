@@ -69,7 +69,7 @@ module Xmldsig
 
     def digest_value=(digest_value)
       reference.at_xpath("descendant::ds:DigestValue", NAMESPACES).content =
-          Base64.encode64(digest_value).chomp
+          Base64.strict_encode64(digest_value).chomp
     end
 
     def transforms
