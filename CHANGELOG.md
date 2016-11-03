@@ -1,5 +1,8 @@
 # Changelog
 
+v0.6.1
+- Using strict base64 encoding
+
 v0.4.1 22-03-2015
 - Added support for SHA256, SHA384 and SHA512 
 
