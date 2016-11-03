@@ -85,7 +85,7 @@ module Xmldsig
 
     def signature_value=(signature_value)
       signature.at_xpath("descendant::ds:SignatureValue", NAMESPACES).content =
-          Base64.encode64(signature_value).chomp
+          Base64.strict_encode64(signature_value).chomp
     end
 
     def validate_schema
