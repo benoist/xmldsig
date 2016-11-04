@@ -57,13 +57,15 @@ module Xmldsig
 
     def digest_method
       algorithm = reference.at_xpath("descendant::ds:DigestMethod", NAMESPACES).get_attribute("Algorithm")
-      case algorithm
-        when "http://www.w3.org/2001/04/xmlenc#sha512"
+      case algorithm =~ /sha(.*?)$/i && $1.to_i
+        when 512
           Digest::SHA512
-        when "http://www.w3.org/2001/04/xmlenc#sha256"
+        when 256
           Digest::SHA256
-        when "http://www.w3.org/2000/09/xmldsig#sha1"
+        when 1
           Digest::SHA1
+        else
+          Digest::SHA256
       end
     end
 
