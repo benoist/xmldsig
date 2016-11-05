@@ -1,4 +1,6 @@
 # Changelog
+v0.6.2
+- Allowing other DigestMethod namespaces
 
 v0.6.1
 - Using strict base64 encoding
