@@ -83,21 +83,28 @@ describe Xmldsig::Reference do
     end
   end
 
-  ["sha1", "sha256", "sha512"].each do |algorithm|
+  ["xmlenc-sha1", "sha1", "sha256", "sha512"].each do |algorithm|
     describe "digest method #{algorithm}" do
       let(:document) { Nokogiri::XML::Document.parse File.read("spec/fixtures/unsigned-#{algorithm}.xml") }
       let(:reference) { Xmldsig::Reference.new(document.at_xpath('//ds:Reference', Xmldsig::NAMESPACES)) }
 
       it "uses the correct digest algorithm" do
-        case algorithm
-        when "sha512"
+        match = algorithm.match(/\d+/)[0].to_i
+        case match
+        when 512
           reference.digest_method.should == Digest::SHA512
-        when "sha256"
+        when 256
           reference.digest_method.should == Digest::SHA256
-        when "sha1"
+        when 1
           reference.digest_method.should == Digest::SHA1
         end
       end
     end
+  end
+
+  it 'defaults to SHA256 for invalid algorithms' do
+    document = Nokogiri::XML::Document.parse(IO.read("spec/fixtures/unsigned-invalid.xml"))
+    reference = Xmldsig::Reference.new(document.at_xpath('//ds:Reference', Xmldsig::NAMESPACES))
+    reference.digest_method.should == Digest::SHA256
   end
 end
