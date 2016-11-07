@@ -6,13 +6,13 @@ describe Xmldsig::Reference do
 
   describe "#digest_value" do
     it "returns the digest value in the xml" do
-      reference.digest_value.should == Base64.decode64("ftoSYFdze1AWgGHF5N9i9SFKThXkqH2AdyzA3/epbJw=")
+      expect(reference.digest_value).to eq(Base64.decode64("ftoSYFdze1AWgGHF5N9i9SFKThXkqH2AdyzA3/epbJw="))
     end
   end
 
   describe "#document" do
     it "returns the document" do
-      reference.document.should == document
+      expect(reference.document).to eq(document)
     end
   end
 
@@ -21,20 +21,22 @@ describe Xmldsig::Reference do
 
     it "sets the correct digest value" do
       reference.sign
-      reference.digest_value.should == Base64.decode64("ftoSYFdze1AWgGHF5N9i9SFKThXkqH2AdyzA3/epbJw=")
+      expect(reference.digest_value).to eq(Base64.decode64("ftoSYFdze1AWgGHF5N9i9SFKThXkqH2AdyzA3/epbJw="))
     end
   end
 
   describe "#referenced_node" do
     it "returns the referenced_node by id" do
-      reference.referenced_node.to_s.should ==
+      expect(reference.referenced_node.to_s).to eq(
         document.at_xpath("//*[@ID='foo']").to_s
+      )
     end
 
     it "returns the referenced node by parent" do
-      reference.stub(:reference_uri).and_return("")
-      reference.referenced_node.to_s.should ==
+      allow(reference).to receive(:reference_uri).and_return("")
+      expect(reference.referenced_node.to_s).to eq(
         document.root.to_s
+      )
     end
 
     it "returns the reference node when using WS-Security style id attribute" do
@@ -43,9 +45,9 @@ describe Xmldsig::Reference do
       node['wsu:Id'] = node['ID']
       node.remove_attribute('ID')
 
-      reference.referenced_node.
-        attribute_with_ns('Id', Xmldsig::NAMESPACES['wsu']).value.
-        should == 'foo'
+      expect(reference.referenced_node.
+        attribute_with_ns('Id', Xmldsig::NAMESPACES['wsu']).value).
+        to eq('foo')
     end
 
     it "returns the reference node when using a custom id attribute" do
@@ -54,8 +56,9 @@ describe Xmldsig::Reference do
       node.set_attribute('MyID', 'foo')
       reference = Xmldsig::Reference.new(document.at_xpath('//ds:Reference', Xmldsig::NAMESPACES), 'MyID')
 
-      reference.referenced_node.to_s.should ==
+      expect(reference.referenced_node.to_s).to eq(
         document.at_xpath("//*[@MyID='foo']").to_s
+      )
     end
 
     it "raises ReferencedNodeNotFound when the refenced node is not present" do
@@ -79,7 +82,7 @@ describe Xmldsig::Reference do
 
   describe "#reference_uri" do
     it "returns the reference uri" do
-      reference.reference_uri.should == "#foo"
+      expect(reference.reference_uri).to eq("#foo")
     end
   end
 
@@ -92,11 +95,11 @@ describe Xmldsig::Reference do
         match = algorithm.match(/\d+/)[0].to_i
         case match
         when 512
-          reference.digest_method.should == Digest::SHA512
+          expect(reference.digest_method).to eq(Digest::SHA512)
         when 256
-          reference.digest_method.should == Digest::SHA256
+          expect(reference.digest_method).to eq(Digest::SHA256)
         when 1
-          reference.digest_method.should == Digest::SHA1
+          expect(reference.digest_method).to eq(Digest::SHA1)
         end
       end
     end
@@ -105,6 +108,6 @@ describe Xmldsig::Reference do
   it 'defaults to SHA256 for invalid algorithms' do
     document = Nokogiri::XML::Document.parse(IO.read("spec/fixtures/unsigned-invalid.xml"))
     reference = Xmldsig::Reference.new(document.at_xpath('//ds:Reference', Xmldsig::NAMESPACES))
-    reference.digest_method.should == Digest::SHA256
+    expect(reference.digest_method).to eq(Digest::SHA256)
   end
 end
