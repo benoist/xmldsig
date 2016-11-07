@@ -12,11 +12,11 @@ describe Xmldsig do
         let(:signed_document) { unsigned_document.sign(private_key) }
 
         it "should be signable an validateable" do
-          Xmldsig::SignedDocument.new(signed_document).validate(certificate).should be == true
+          expect(Xmldsig::SignedDocument.new(signed_document).validate(certificate)).to eq(true)
         end
 
         it 'should have at least 1 signature element' do
-          Xmldsig::SignedDocument.new(signed_document).signatures.count.should >= 1
+          expect(Xmldsig::SignedDocument.new(signed_document).signatures.count).to be >= 1
         end
       end
     end
@@ -30,7 +30,7 @@ describe Xmldsig do
         let(:certificate) { OpenSSL::X509::Certificate.new(File.read(document.gsub('.txt', '.cert'))) }
 
         it "should be validateable" do
-          signed_document.validate(certificate).should be == true
+          expect(signed_document.validate(certificate)).to eq(true)
         end
       end
     end
@@ -64,11 +64,11 @@ describe Xmldsig do
       let(:signed_document) { unsigned_document.sign(private_key) }
 
       it "should be signable an validateable" do
-        Xmldsig::SignedDocument.new(signed_document, :id_attr => 'MyID').validate(certificate).should be == true
+        expect(Xmldsig::SignedDocument.new(signed_document, :id_attr => 'MyID').validate(certificate)).to eq(true)
       end
 
       it 'should have a signature element' do
-        Xmldsig::SignedDocument.new(signed_document, :id_attr => 'MyID').signatures.count.should == 1
+        expect(Xmldsig::SignedDocument.new(signed_document, :id_attr => 'MyID').signatures.count).to eq(1)
       end
     end
 
@@ -77,7 +77,7 @@ describe Xmldsig do
       let(:signed_document) { Xmldsig::SignedDocument.new(signed_xml, :id_attr => 'MyID') }
 
       it "should be validateable" do
-        signed_document.validate(certificate).should be == true
+        expect(signed_document.validate(certificate)).to eq(true)
       end
     end
   end

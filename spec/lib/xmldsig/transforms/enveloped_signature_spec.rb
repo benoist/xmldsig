@@ -10,9 +10,9 @@ describe Xmldsig::Transforms::EnvelopedSignature do
     described_class.new(node_with_nested_signature, nil).transform
 
     remaining_signatures = node_with_nested_signature.xpath('descendant::ds:Signature', Xmldsig::NAMESPACES)
-    remaining_signatures.count.should == 1
+    expect(remaining_signatures.count).to eq(1)
     signature = Xmldsig::Signature.new(remaining_signatures.first)
 
-    signature.references.first.reference_uri.should == '#baz'
+    expect(signature.references.first.reference_uri).to eq('#baz')
   end
 end
