@@ -16,5 +16,5 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.version       = Xmldsig::VERSION
 
-  gem.add_dependency("nokogiri", '~> 1.6.8')
+  gem.add_dependency("nokogiri", '>= 1.6.8', '< 2.0.0')
 end
