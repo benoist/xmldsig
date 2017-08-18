@@ -21,16 +21,27 @@ module Xmldsig
 
     def referenced_node
       if reference_uri && reference_uri != ""
-        id = reference_uri[1..-1]
-        referenced_node_xpath = @id_attr ? "//*[@#{@id_attr}=$uri]" : "//*[@ID=$uri or @wsu:Id=$uri]"
-        variable_bindings = { 'uri' => id }
-        if ref = document.dup.at_xpath(referenced_node_xpath, NAMESPACES, variable_bindings)
-          ref
+        if reference_uri[0] == "/"
+          if ref = document.dup.at_xpath(reference_uri)
+            ref
+          else
+            raise(
+                ReferencedNodeNotFound,
+                "Could not find the referenced node #{reference_uri}'"
+            )
+          end
         else
-          raise(
-              ReferencedNodeNotFound,
-              "Could not find the referenced node #{id}'"
-          )
+          id = reference_uri[1..-1]
+          referenced_node_xpath = @id_attr ? "//*[@#{@id_attr}=$uri]" : "//*[@ID=$uri or @wsu:Id=$uri]"
+          variable_bindings = { 'uri' => id }
+          if ref = document.dup.at_xpath(referenced_node_xpath, NAMESPACES, variable_bindings)
+            ref
+          else
+            raise(
+                ReferencedNodeNotFound,
+                "Could not find the referenced node #{id}'"
+            )
+          end
         end
       else
         document.dup.root
