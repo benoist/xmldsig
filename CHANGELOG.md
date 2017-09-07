@@ -1,4 +1,7 @@
 # Changelog
+v0.6.4
+- Allow a custom XSD file for schema verifiation
+
 v0.6.2
 - Allowing other DigestMethod namespaces
 
