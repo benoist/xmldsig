@@ -17,6 +17,7 @@ module Xmldsig
   end
 
   XSD_FILE = File.read(File.expand_path('../xmldsig/xmldsig-core-schema.xsd', __FILE__))
+  XSD_X509_SERIAL_FIX_FILE = File.read(File.expand_path('../xmldsig/xmldsig-core-schema-x509-serial-fix.xsd', __FILE__))
 end
 
 require "xmldsig/canonicalizer"

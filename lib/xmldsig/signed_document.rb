@@ -12,8 +12,8 @@ module Xmldsig
       @force    = options[:force]
     end
 
-    def validate(certificate = nil, &block)
-      signatures.any? && signatures.all? { |signature| signature.valid?(certificate, &block) }
+    def validate(certificate = nil, schema = nil, &block)
+      signatures.any? && signatures.all? { |signature| signature.valid?(certificate, schema, &block) }
     end
 
     def sign(private_key = nil, instruct = true, &block)

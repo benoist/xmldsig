@@ -67,6 +67,10 @@ describe Xmldsig::SignedDocument do
       expect(xml_without_signature.validate(certificate)).to eq(false)
     end
 
+    it "accepts a custom schema" do
+      expect(signed_document.validate(certificate, Xmldsig::XSD_X509_SERIAL_FIX_FILE)).to eql true
+    end
+
     it "accepts a block" do
       expect(signed_document.validate do |signature_value, data|
         certificate.public_key.verify(OpenSSL::Digest::SHA256.new, signature_value, data)

@@ -98,6 +98,20 @@ describe Xmldsig::Signature do
       end
       expect(signature.errors).to be_empty
     end
+
+    context "when X509SerialNumber element is longer than 24 digits" do
+      let(:document) { Nokogiri::XML::Document.parse(File.read("spec/fixtures/unsigned-x509-serial-fix.xml")) }
+
+      before { signature.sign(private_key) }
+
+      it "returns false with the default validation scheme and true with the X509 serial fix scheme" do
+        aggregate_failures do
+          expect { signature.valid?(certificate) }.to raise_error Xmldsig::SchemaError, /is not a valid value of the atomic type 'xs:integer'/
+          expect(signature.valid?(certificate, Xmldsig::XSD_X509_SERIAL_FIX_FILE)).to eq(true)
+          expect(signature.errors).to eql []
+        end
+      end
+    end
   end
 
   ["sha1", "sha256", "sha384", "sha512"].each do |algorithm|
