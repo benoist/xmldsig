@@ -125,6 +125,15 @@ describe Xmldsig::SignedDocument do
         expect(signed_document.signatures.last.signature_value).to_not be(unsigned_document.signatures.last.signature_value)
       end
     end
+
+    context 'with inclusive namespaces for the signature' do
+      let(:unsigned_xml) { File.read("spec/fixtures/unsigned_signature_namespace.xml") }
+      let(:signed_xml) { File.read("spec/fixtures/signed_signature_namespace.xml") }
+
+      it 'canonicalizes and signs correctly' do
+        expect(unsigned_document.sign(private_key)).to eq(signed_xml)
+      end
+    end
   end
 
   describe "Nested Signatures" do

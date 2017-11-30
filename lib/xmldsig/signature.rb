@@ -54,7 +54,20 @@ module Xmldsig
     end
 
     def canonicalized_signed_info
-      Canonicalizer.new(signed_info, canonicalization_method).canonicalize
+      Canonicalizer.new(
+        signed_info,
+        canonicalization_method,
+        inclusive_namespaces_for_canonicalization
+      ).canonicalize
+    end
+
+    def inclusive_namespaces_for_canonicalization
+      namespaces_node = signed_info.at_xpath(
+        'descendant::ds:CanonicalizationMethod/ec:InclusiveNamespaces',
+        NAMESPACES
+      )
+      return unless namespaces_node && namespaces_node.get_attribute('PrefixList')
+      namespaces_node.get_attribute('PrefixList').split(/\W+/)
     end
 
     def calculate_signature_value(private_key, &block)
