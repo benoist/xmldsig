@@ -1,4 +1,7 @@
 # Changelog
+v0.6.5
+- Added inclusive namespace prefix list for canonicalization method (jmhooper)
+
 v0.6.4
 - Allow a custom XSD file for schema verifiation
 
