@@ -2,14 +2,15 @@ module Xmldsig
   class Signature
     attr_accessor :signature
 
-    def initialize(signature, id_attr = nil)
+    def initialize(signature, id_attr = nil, referenced_documents = {})
       @signature = signature
       @id_attr = id_attr
+      @referenced_documents = referenced_documents
     end
 
     def references
       @references ||= signature.xpath("descendant::ds:Reference", NAMESPACES).map do |node|
-        Reference.new(node, @id_attr)
+        Reference.new(node, @id_attr, @referenced_documents)
       end
     end
 

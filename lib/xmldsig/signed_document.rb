@@ -1,6 +1,6 @@
 module Xmldsig
   class SignedDocument
-    attr_accessor :document, :id_attr, :force
+    attr_accessor :document, :id_attr, :force, :referenced_documents
 
     def initialize(document, options = {})
       @document = if document.kind_of?(Nokogiri::XML::Document)
@@ -10,6 +10,7 @@ module Xmldsig
       end
       @id_attr  = options[:id_attr] if options[:id_attr]
       @force    = options[:force]
+      @referenced_documents = options.fetch(:referenced_documents, {})
     end
 
     def validate(certificate = nil, schema = nil, &block)
@@ -35,7 +36,7 @@ module Xmldsig
     def signatures
       document.xpath("//ds:Signature", NAMESPACES).
           sort { |left, right| left.ancestors.size <=> right.ancestors.size }.
-          collect { |node| Signature.new(node, @id_attr) } || []
+          collect { |node| Signature.new(node, @id_attr, referenced_documents) } || []
     end
   end
 end
