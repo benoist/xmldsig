@@ -21,6 +21,8 @@ module Xmldsig
           Transforms::Canonicalize.new(node, transform_node)
         when "http://www.w3.org/2001/10/xml-exc-c14n#WithComments"
           Transforms::Canonicalize.new(node, transform_node, true)
+        when "http://www.w3.org/TR/1999/REC-xpath-19991116"
+          Transforms::XPath.new(node, transform_node)
       end
     end
 

@@ -24,6 +24,9 @@ unsigned_xml = <<-XML
 <?xml version="1.0" encoding="UTF-8"?>
 <foo:Foo ID="foo" xmlns:foo="http://example.com/foo#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:ec="http://www.w3.org/2001/10/xml-exc-c14n#">
   <foo:Bar>bar</foo:Bar>
+  <foo:Baz>
+    <foo:Qux>quuz</foo:Qux>
+  </foo:Baz>
   <ds:Signature>
     <ds:SignedInfo>
       <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
@@ -31,6 +34,9 @@ unsigned_xml = <<-XML
       <ds:Reference URI="#foo">
         <ds:Transforms>
           <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+          <ds:Transform Algorithm="http://www.w3.org/TR/1999/REC-xpath-19991116">
+            <ds:XPath>not(ancestor-or-self::foo:Baz)</ds:XPath>
+          </ds:Transform>
           <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
             <ec:InclusiveNamespaces PrefixList="foo"/>
           </ds:Transform>
