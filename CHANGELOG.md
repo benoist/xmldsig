@@ -1,4 +1,8 @@
 # Changelog
+v0.6.6
+- Add support for cid references to external documents. (iterateNZ)
+- Add support for http://www.w3.org/TR/1999/REC-xpath-19991116 transforms (iterateNZ)
+
 v0.6.5
 - Added inclusive namespace prefix list for canonicalization method (jmhooper)
 
