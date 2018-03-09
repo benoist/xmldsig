@@ -81,4 +81,31 @@ describe Xmldsig do
       end
     end
   end
+
+  describe "Allows passing referenced documents" do
+    let(:referenced_documents) { { 'fooDocument' => 'ABC' } }
+
+    describe "an unsigned document" do
+      let(:unsigned_xml) { File.read("spec/fixtures/unsigned_with_cid_reference.xml") }
+      let(:unsigned_document) { Xmldsig::SignedDocument.new(unsigned_xml, referenced_documents: referenced_documents) }
+      let(:signed_document) { unsigned_document.sign(private_key) }
+
+      it "should be signable an validateable" do
+        expect(Xmldsig::SignedDocument.new(signed_document, referenced_documents: referenced_documents).validate(certificate)).to eq(true)
+      end
+
+      it 'should have at least 1 signature element' do
+        expect(Xmldsig::SignedDocument.new(signed_document).signatures.count).to be >= 1
+      end
+    end
+
+    context "a signed document" do
+      let(:signed_xml) { File.read("spec/fixtures/signed_with_cid_reference.xml") }
+      let(:signed_document) { Xmldsig::SignedDocument.new(signed_xml, referenced_documents: referenced_documents) }
+
+      it "should be validateable" do
+        expect(signed_document.validate(certificate)).to eq(true)
+      end
+    end
+  end
 end

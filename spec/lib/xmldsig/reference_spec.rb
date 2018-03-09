@@ -78,6 +78,30 @@ describe Xmldsig::Reference do
       expect { malicious_reference.referenced_node }.
         to raise_error(Xmldsig::Reference::ReferencedNodeNotFound)
     end
+
+    context "when the referenced node is prefixed with 'cid:'" do
+      let(:document) { Nokogiri::XML::Document.parse File.read("spec/fixtures/unsigned_with_cid_reference.xml") }
+      let(:foo_document) { "<test><ing>present</ing></test>" }
+      let(:referenced_documents) { { "fooDocument" => foo_document } }
+      let(:reference) { Xmldsig::Reference.new(document.at_xpath('//ds:Reference', Xmldsig::NAMESPACES), nil, referenced_documents) }
+
+      it "has the correct reference_uri" do
+        expect(reference.reference_uri).to eq "cid:fooDocument"
+      end
+
+      it "returns the document referenced by the content id" do
+        expect(reference.referenced_node).to eq foo_document
+      end
+
+      context "when the document has no referenced_documents matching the referenced name" do
+        let(:referenced_documents) { Hash.new }
+
+        it "raises ReferencedNodeNotFound" do
+          expect { reference.referenced_node }.
+            to raise_error(Xmldsig::Reference::ReferencedNodeNotFound)
+        end
+      end
+    end
   end
 
   describe "#reference_uri" do
