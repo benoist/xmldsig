@@ -2,6 +2,9 @@ module Xmldsig
   class Reference
     attr_accessor :reference, :errors, :id_attr
 
+    XPOINTER_ROOT = '#xpointer(/)'
+    XPOINTER_REG_ID = /#xpointer\(id\('(.*)'\)\)/
+
     class ReferencedNodeNotFound < Exception;
     end
 
@@ -32,18 +35,21 @@ module Xmldsig
                 "Could not find referenced document with ContentId #{content_id}"
             )
           end
-        else
-          id = reference_uri[1..-1]
-          referenced_node_xpath = @id_attr ? "//*[@#{@id_attr}=$uri]" : "//*[@ID=$uri or @wsu:Id=$uri]"
-          variable_bindings = { 'uri' => id }
-          if ref = document.dup.at_xpath(referenced_node_xpath, NAMESPACES, variable_bindings)
-            ref
+        elsif reference_uri.start_with?("#xpointer")
+          return document.dup.root if reference_uri == XPOINTER_ROOT
+
+          matched = reference_uri.match(XPOINTER_REG_ID)
+          if !matched.nil?
+            get_node_by_id!(@id_attr, matched[1])
           else
             raise(
-                ReferencedNodeNotFound,
-                "Could not find the referenced node #{id}'"
+              ReferencedNodeNotFound,
+              "Could not find referenced document with referenceUri #{reference_uri}"
             )
           end
+        else
+          id = reference_uri[1..-1]
+          get_node_by_id!(@id_attr, id)
         end
       else
         document.dup.root
@@ -94,6 +100,21 @@ module Xmldsig
     def validate_digest_value
       unless digest_value == calculate_digest_value
         @errors << :digest_value
+      end
+    end
+
+    private
+
+    def get_node_by_id!(id_attr, id)
+      referenced_node_xpath = id_attr ? "//*[@#{id_attr}=$uri]" : "//*[@ID=$uri or @wsu:Id=$uri]"
+      variable_bindings = { 'uri' => id }
+      if ref = document.dup.at_xpath(referenced_node_xpath, NAMESPACES, variable_bindings)
+        ref
+      else
+        raise(
+            ReferencedNodeNotFound,
+            "Could not find the referenced node #{id}'"
+        )
       end
     end
   end
