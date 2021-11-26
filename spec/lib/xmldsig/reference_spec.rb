@@ -102,6 +102,30 @@ describe Xmldsig::Reference do
         end
       end
     end
+
+    context "when the referenced node is file name" do
+      let(:document) { Nokogiri::XML::Document.parse File.read("spec/fixtures/unsigned_with_xml_reference.xml") }
+      let(:xml_document) { "<test><ing>present</ing></test>" }
+      let(:referenced_documents) { { "test.xml" => xml_document } }
+      let(:reference) { Xmldsig::Reference.new(document.at_xpath('//ds:Reference', Xmldsig::NAMESPACES), nil, referenced_documents) }
+
+      it "has the correct reference_uri" do
+        expect(reference.reference_uri).to eq "test.xml"
+      end
+
+      it "returns the document referenced by file name" do
+        expect(reference.referenced_node).to eq xml_document
+      end
+
+      context "when the document has no referenced_documents matching the referenced name" do
+        let(:referenced_documents) { Hash.new }
+
+        it "raises ReferencedNodeNotFound" do
+          expect { reference.referenced_node }.
+            to raise_error(Xmldsig::Reference::ReferencedNodeNotFound)
+        end
+      end
+    end
   end
 
   describe "#reference_uri" do
