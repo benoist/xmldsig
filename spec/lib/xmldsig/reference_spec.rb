@@ -32,6 +32,20 @@ describe Xmldsig::Reference do
       )
     end
 
+    it "returns the referenced node by xpointer root" do
+      allow(reference).to receive(:reference_uri).and_return("#xpointer(/)")
+      expect(reference.referenced_node.to_s).to eq(
+        document.root.to_s
+      )
+    end
+
+    it "returns the referenced node by xpointer id" do
+      allow(reference).to receive(:reference_uri).and_return("#xpointer(id('foo'))")
+      expect(reference.referenced_node.to_s).to eq(
+        document.at_xpath("//*[@ID='foo']").to_s
+      )
+    end
+
     it "returns the referenced node by parent" do
       allow(reference).to receive(:reference_uri).and_return("")
       expect(reference.referenced_node.to_s).to eq(
