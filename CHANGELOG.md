@@ -1,4 +1,7 @@
 # Changelog
+v0.7.0
+- Changed ReferencedNodeNotFound parent class to Xmldsig::Error for easier error handling
+
 v0.6.6
 - Add support for cid references to external documents. (iterateNZ)
 - Add support for http://www.w3.org/TR/1999/REC-xpath-19991116 transforms (iterateNZ)
