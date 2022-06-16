@@ -2,7 +2,7 @@ module Xmldsig
   class Reference
     attr_accessor :reference, :errors, :id_attr
 
-    class ReferencedNodeNotFound < Exception;
+    class ReferencedNodeNotFound < Xmldsig::Error
     end
 
     def initialize(reference, id_attr = nil, referenced_documents = {})
