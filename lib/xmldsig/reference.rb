@@ -24,14 +24,9 @@ module Xmldsig
       if reference_uri && reference_uri != ""
         if @id_attr.nil? && reference_uri.start_with?("cid:")
           content_id = reference_uri[4..-1]
-          if @referenced_documents.has_key?(content_id)
-            @referenced_documents[content_id].dup
-          else
-            raise(
-                ReferencedNodeNotFound,
-                "Could not find referenced document with ContentId #{content_id}"
-            )
-          end
+          get_node_by_referenced_documents!(@referenced_documents, content_id)
+        elsif !File.extname(reference_uri).gsub('.', '').empty?
+          get_node_by_referenced_documents!(@referenced_documents, reference_uri)
         else
           id = reference_uri[1..-1]
           referenced_node_xpath = @id_attr ? "//*[@#{@id_attr}=$uri]" : "//*[@ID=$uri or @wsu:Id=$uri]"
@@ -94,6 +89,19 @@ module Xmldsig
     def validate_digest_value
       unless digest_value == calculate_digest_value
         @errors << :digest_value
+      end
+    end
+
+    private
+
+    def get_node_by_referenced_documents!(referenced_documents, content_id)
+      if referenced_documents.has_key?(content_id)
+        referenced_documents[content_id].dup
+      else
+        raise(
+            ReferencedNodeNotFound,
+            "Could not find referenced document with ContentId #{content_id}"
+        )
       end
     end
   end
