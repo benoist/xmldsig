@@ -1,0 +1,57 @@
+<rdf:RDF xmlns:rdf="http://www.w3c.org/rdf">
+  <DocumentResource about="test.xml" Id="main">
+    <DocumentType>main</DocumentType>
+    <Title>test.xml</Title>
+  </DocumentResource>
+  <PackageResource>
+    <ManagementInformation>
+      <Resource>
+        <ProcedureID>test</ProcedureID>
+        <ProcedureName>name</ProcedureName>
+        <ProcedureForm>form</ProcedureForm>
+        <ApplicationNumber/>
+        <ArrivalTime>
+          <Resource>
+            <Date.ISO8601/>
+            <Date.JISX0301/>
+          </Resource>
+        </ArrivalTime>
+      </Resource>
+    </ManagementInformation>
+    <Signatures>
+      <Signature Id="Signature" xmlns="http://www.w3.org/2000/09/xmldsig#">
+        <SignedInfo>
+          <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+          <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+          <Reference URI="cid:fooDocument">
+            <Transforms>
+                <Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" />
+            </Transforms>
+            <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+            <DigestValue></DigestValue>
+          </Reference>
+          <Reference>
+            <Transforms>
+              <Transform Algorithm="http://www.w3.org/TR/1999/REC-xpath-19991116">
+                <dsig:XPath xmlns:dsig="http://www.w3.org/2000/09/xmldsig#">not (ancestor-or-self::ApplicationNumber)
+                  and not (ancestor-or-self::ArrivalTime) and not
+                  (ancestor-or-self::Signatures)
+                </dsig:XPath>
+              </Transform>
+              <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+              <Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+            </Transforms>
+            <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+            <DigestValue></DigestValue>
+          </Reference>
+        </SignedInfo>
+        <SignatureValue></SignatureValue>
+        <KeyInfo>
+          <X509Data>
+            <X509Certificate></X509Certificate>
+          </X509Data>
+        </KeyInfo>
+      </Signature>
+    </Signatures>
+  </PackageResource>
+</rdf:RDF>
