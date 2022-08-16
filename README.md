@@ -22,7 +22,7 @@ Or install it yourself as:
 ```ruby
 unsigned_xml = <<-XML
 <?xml version="1.0" encoding="UTF-8"?>
-<foo:Foo ID="foo" xmlns:foo="http://example.com/foo#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:ec="http://www.w3.org/2001/10/xml-exc-c14n#">
+<foo:Foo ID="foo" xmlns:foo="http://example.com/foo#" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:ec="http://www.w3.org/2001/10/xml-exc-c14n#" MyID="foo">
   <foo:Bar>bar</foo:Bar>
   <foo:Baz>
     <foo:Qux>quuz</foo:Qux>
